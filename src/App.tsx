@@ -71,7 +71,7 @@ function SetupScreen() {
             <div className="liquid-panel p-10 w-[500px] flex flex-col gap-8 shadow-2xl">
                 <div className="text-center space-y-2 mb-4">
                     <h2 className="text-3xl font-bold tracking-tight">Set up Class</h2>
-                    <p className="text-sm text-gray-500">오늘 진행할 테마와 차시를 선택해주세요.</p>
+                    <p className="text-sm text-gray-500">오늘 진행할 테마와 Day를 선택해주세요.</p>
                 </div>
 
                 <div className="space-y-4">
@@ -93,14 +93,14 @@ function SetupScreen() {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">차시 선택</label>
+                        <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Day 선택</label>
                         <select
                             className="w-full p-4 rounded-xl bg-white/60 dark:bg-black/60 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-liquid-blue outline-none transition-all cursor-pointer"
                             value={selectedSession || ''}
                             onChange={(e) => setSession(e.target.value)}
                         >
-                            <option value="" disabled>2. 차시를 선택하세요</option>
-                            {[1, 2, 3, 4, 13, 14].map(s => <option key={s} value={s}>{s}차시</option>)}
+                            <option value="" disabled>2. Day를 선택하세요</option>
+                            {[1, 2, 3].map(s => <option key={s} value={s}>Day {s}</option>)}
                         </select>
                     </div>
                 </div>
@@ -146,6 +146,10 @@ function LearningScreen() {
 
     const goNext = () => {
         if (idx < data.length - 1) setIdx(idx + 1);
+    };
+
+    const goPrev = () => {
+        if (idx > 0) setIdx(idx - 1);
     };
 
     return (
@@ -203,9 +207,9 @@ function LearningScreen() {
                             exit={{ opacity: 0, x: -20 }}
                             className="w-full h-full flex flex-col items-center"
                         >
-                            {currentChapter === 1 && <Ch1Flashcard item={currentItem} path={classDataPath!} onNext={goNext} progress={`${idx + 1}/${data.length}`} />}
-                            {currentChapter === 2 && <Ch2Interpretation item={currentItem} path={classDataPath!} onNext={goNext} progress={`${idx + 1}/${data.length}`} vocabulary={data.map(d => d.Word).filter(Boolean)} />}
-                            {currentChapter === 3 && <Ch3Translation item={currentItem} path={classDataPath!} onNext={goNext} progress={`${idx + 1}/${data.length}`} vocabulary={data} />}
+                            {currentChapter === 1 && <Ch1Flashcard item={currentItem} path={classDataPath!} onNext={goNext} onPrev={goPrev} progress={`${idx + 1}/${data.length}`} />}
+                            {currentChapter === 2 && <Ch2Interpretation item={currentItem} path={classDataPath!} onNext={goNext} onPrev={goPrev} progress={`${idx + 1}/${data.length}`} vocabulary={data.map(d => d.Word).filter(Boolean)} />}
+                            {currentChapter === 3 && <Ch3Translation item={currentItem} path={classDataPath!} onNext={goNext} onPrev={goPrev} progress={`${idx + 1}/${data.length}`} vocabulary={data} />}
                         </motion.div>
                     )}
                 </AnimatePresence>
@@ -340,7 +344,7 @@ function GlobalListView({ items, currentChapter }: { items: any[], currentChapte
 }
 
 // Ch1
-function Ch1Flashcard({ item, onNext, progress }: any) {
+function Ch1Flashcard({ item, onNext, onPrev, progress }: any) {
     const [revealed, setRevealed] = useState(false);
     const [viewMode, setViewMode] = useState<'EN' | 'KR'>('EN'); // EN: 영어 보여주기, KR: 한글 보여주기
 
@@ -355,13 +359,16 @@ function Ch1Flashcard({ item, onNext, progress }: any) {
         else onNext();
     };
 
-    // 키보드 단축키: 스페이스·↓ = 다시 읽기, 엔터 = 정답공개/다음, → = 다음(Skip)
+    // 키보드 단축키: 스페이스·↓ = 다시 읽기, 엔터 = 정답공개/다음, → = 다음(Skip), ← = 이전
     useEffect(() => {
         const handleKey = (e: KeyboardEvent) => {
             if (document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA') return;
             if (e.code === 'ArrowRight') {
                 e.preventDefault();
                 onNext();
+            } else if (e.code === 'ArrowLeft') {
+                e.preventDefault();
+                onPrev();
             } else if (e.code === 'Space' || e.code === 'ArrowDown') {
                 e.preventDefault();
                 speakText(item?.Word);
@@ -372,7 +379,7 @@ function Ch1Flashcard({ item, onNext, progress }: any) {
         };
         window.addEventListener('keydown', handleKey);
         return () => window.removeEventListener('keydown', handleKey);
-    }, [item, revealed]);
+    }, [item, revealed, onNext, onPrev]);
 
     const questionText = viewMode === 'EN' ? item.Word : item.Meaning;
     const answerText = viewMode === 'EN' ? item.Meaning : item.Word;
@@ -482,7 +489,7 @@ function Ch1Flashcard({ item, onNext, progress }: any) {
 }
 
 // Ch2 
-function Ch2Interpretation({ item, onNext, progress, vocabulary }: any) {
+function Ch2Interpretation({ item, onNext, onPrev, progress, vocabulary }: any) {
     const [revealed, setRevealed] = useState(false);
     const audioRef = useRef<HTMLAudioElement>(null);
     const [textVal, setTextVal] = useState('');
@@ -506,11 +513,18 @@ function Ch2Interpretation({ item, onNext, progress, vocabulary }: any) {
                     e.preventDefault();
                     handleAction();
                 }
+                // 입력창에서도 왼쪽 방향키로 뒤로 갈 수 있게 (내용이 없을 때만 또는 항상 - 여기서는 항상 뒤로 가게 설정)
+                if (e.code === 'ArrowLeft' && textVal === '') {
+                    onPrev();
+                }
                 return;
             }
             if (e.code === 'ArrowRight') {
                 e.preventDefault();
                 onNext();
+            } else if (e.code === 'ArrowLeft') {
+                e.preventDefault();
+                onPrev();
             } else if (e.code === 'ArrowDown' || e.code === 'Space') {
                 e.preventDefault();
                 speakText(item.Sentence1 || item.Word);
@@ -521,7 +535,7 @@ function Ch2Interpretation({ item, onNext, progress, vocabulary }: any) {
         };
         window.addEventListener('keydown', handleKey);
         return () => window.removeEventListener('keydown', handleKey);
-    }, [item, revealed, onNext]);
+    }, [item, revealed, onNext, onPrev, textVal]);
 
     // highlight dictionary words
     const renderHighlighted = (sentence: string) => {
@@ -586,7 +600,7 @@ function Ch2Interpretation({ item, onNext, progress, vocabulary }: any) {
 }
 
 // Ch3 
-function Ch3Translation({ item, onNext, progress, vocabulary }: any) {
+function Ch3Translation({ item, onNext, onPrev, progress, vocabulary }: any) {
     const [revealed, setRevealed] = useState(false);
     const audioRef = useRef<HTMLAudioElement>(null);
     const [textVal, setTextVal] = useState('');
@@ -603,7 +617,33 @@ function Ch3Translation({ item, onNext, progress, vocabulary }: any) {
         else onNext();
     };
 
-    useGlobalHotkeys(audioRef, handleAction);
+    // 3장 번역 단축키 처리
+    useEffect(() => {
+        const handleKey = (e: KeyboardEvent) => {
+            const isInputMode = document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA';
+
+            if (e.code === 'ArrowRight') {
+                e.preventDefault();
+                onNext();
+            } else if (e.code === 'ArrowLeft') {
+                if (isInputMode && textVal !== '') return; // 입력 중일 때는 텍스트가 있으면 이동 방지
+                e.preventDefault();
+                onPrev();
+            } else if (e.code === 'ArrowDown') {
+                e.preventDefault();
+                speakText(item.Sentence1 || item.Word);
+            } else if (e.code === 'Space') {
+                if (isInputMode) return; // 입력 중에는 스페이스바 무시
+                e.preventDefault();
+                speakText(item.Sentence1 || item.Word);
+            } else if (e.code === 'Enter') {
+                e.preventDefault();
+                handleAction();
+            }
+        };
+        window.addEventListener('keydown', handleKey);
+        return () => window.removeEventListener('keydown', handleKey);
+    }, [item, revealed, onNext, onPrev, viewMode, textVal]);
 
     // 툴팁 등을 위한 하이라이팅 로직 (영어일 때만 주로 사용)
     const renderContent = (sentence: string, isEnglish: boolean) => {
@@ -631,30 +671,6 @@ function Ch3Translation({ item, onNext, progress, vocabulary }: any) {
 
     const questionText = viewMode === 'EN' ? (item.Sentence1 || item.Word) : (item.Translation1 || item.Meaning);
     const answerText = viewMode === 'EN' ? (item.Translation1 || item.Meaning) : (item.Sentence1 || item.Word);
-
-    // 3장 번역 단축키 처리
-    useEffect(() => {
-        const handleKey = (e: KeyboardEvent) => {
-            const isInputMode = document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA';
-
-            if (e.code === 'ArrowRight') {
-                e.preventDefault();
-                onNext();
-            } else if (e.code === 'ArrowDown') {
-                e.preventDefault();
-                speakText(item.Sentence1 || item.Word);
-            } else if (e.code === 'Space') {
-                if (isInputMode) return; // 입력 중에는 스페이스바 무시
-                e.preventDefault();
-                speakText(item.Sentence1 || item.Word);
-            } else if (e.code === 'Enter') {
-                e.preventDefault();
-                handleAction();
-            }
-        };
-        window.addEventListener('keydown', handleKey);
-        return () => window.removeEventListener('keydown', handleKey);
-    }, [item, revealed, onNext, viewMode]);
 
     return (
         <div className="flex-1 w-full max-w-4xl mt-8 mb-8 flex flex-col relative text-center gap-4">
