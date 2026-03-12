@@ -315,6 +315,18 @@ function Ch1Flashcard({ item, onNext, onPrev, progress }: any) {
                         {questionText}
                     </h2>
                     <p className="text-xs font-bold text-gray-300 tracking-tighter uppercase">{item.Theme}</p>
+
+                    {/* Answer inline */}
+                    <AnimatePresence>
+                        {revealed && (
+                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-4 border-t border-gray-200 mt-4">
+                                <span className="font-bold text-liquid-blue uppercase tracking-widest text-xs">Meaning</span>
+                                <p className={`${viewMode === 'EN' ? 'text-2xl' : 'text-3xl'} font-bold text-gray-700 leading-tight mt-1`}>
+                                    {answerText}
+                                </p>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
             </div>
 
@@ -325,23 +337,6 @@ function Ch1Flashcard({ item, onNext, onPrev, progress }: any) {
                 </button>
                 <button onClick={onNext} className="neu-btn-blue w-20 py-3 text-base">Next</button>
             </div>
-
-            {/* Answer */}
-            <AnimatePresence>
-                {revealed && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                        className="shrink-0 w-full neu-panel p-4 shadow-neu-pressed"
-                    >
-                        <div className="text-center space-y-1">
-                            <span className="font-bold text-liquid-blue uppercase tracking-widest text-xs">Meaning</span>
-                            <p className={`${viewMode === 'EN' ? 'text-2xl' : 'text-3xl'} font-bold text-gray-700 leading-tight`}>
-                                {answerText}
-                            </p>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
         </div>
     );
 }
@@ -401,6 +396,19 @@ function Ch2Interpretation({ item, onNext, onPrev, progress, vocabulary }: any) 
                         <Volume2 className="w-9 h-9 text-liquid-blue" />
                     </button>
                     <p className="text-gray-400 font-bold uppercase tracking-widest text-sm">Listen and Interpret</p>
+
+                    {/* Answer inline */}
+                    <AnimatePresence>
+                        {revealed && (
+                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-4 border-t border-gray-200 mt-2 w-full text-center">
+                                <span className="font-bold text-liquid-blue uppercase tracking-widest text-xs">Answer</span>
+                                <p className="text-xl font-extrabold text-gray-700 leading-relaxed mt-1">
+                                    {renderHighlighted(item.Sentence1 || item.Word)}
+                                </p>
+                                {item.Translation1 && <p className="text-sm text-gray-400 font-medium mt-1">{item.Translation1}</p>}
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
             </div>
 
@@ -418,24 +426,6 @@ function Ch2Interpretation({ item, onNext, onPrev, progress, vocabulary }: any) 
                 </button>
                 <button onClick={onNext} className="neu-btn-blue w-16 text-base">Next</button>
             </div>
-
-            {/* Answer */}
-            <AnimatePresence>
-                {revealed && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                        className="shrink-0 w-full neu-panel p-4 text-left shadow-neu-pressed"
-                    >
-                        <div className="space-y-1">
-                            <span className="font-bold text-liquid-blue uppercase tracking-widest text-xs">Answer</span>
-                            <p className="text-xl font-extrabold text-gray-700 leading-relaxed">
-                                {renderHighlighted(item.Sentence1 || item.Word)}
-                            </p>
-                            {item.Translation1 && <p className="text-sm text-gray-400 font-medium">{item.Translation1}</p>}
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
         </div>
     );
 }
@@ -519,9 +509,21 @@ function Ch3Translation({ item, onNext, onPrev, progress, vocabulary }: any) {
                 <button onClick={() => speakText(item.Sentence1 || item.Word)} className="absolute top-4 left-4 neu-btn p-2 w-10 h-10" title="영어 발음 듣기">
                     <Volume2 className="w-5 h-5 text-liquid-blue" />
                 </button>
-                <h2 className="text-2xl font-extrabold text-gray-700 leading-relaxed px-8 text-center">
-                    {renderContent(questionText, viewMode === 'EN')}
-                </h2>
+                <div className="text-center px-8">
+                    <h2 className="text-2xl font-extrabold text-gray-700 leading-relaxed">
+                        {renderContent(questionText, viewMode === 'EN')}
+                    </h2>
+
+                    {/* Answer inline */}
+                    <AnimatePresence>
+                        {revealed && (
+                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-4 border-t border-gray-200 mt-4">
+                                <span className="font-bold text-liquid-blue uppercase tracking-widest text-xs">Answer</span>
+                                <p className="text-xl font-extrabold text-gray-700 leading-relaxed mt-1">{answerText}</p>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
             </div>
 
             {/* Input */}
@@ -538,21 +540,6 @@ function Ch3Translation({ item, onNext, onPrev, progress, vocabulary }: any) {
                 </button>
                 <button onClick={onNext} className="neu-btn-blue w-16 text-base">Next</button>
             </div>
-
-            {/* Answer */}
-            <AnimatePresence>
-                {revealed && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                        className="shrink-0 w-full neu-panel p-4 text-left shadow-neu-pressed"
-                    >
-                        <div className="space-y-1">
-                            <span className="font-bold text-liquid-blue uppercase tracking-widest text-xs">Answer</span>
-                            <p className="text-xl font-extrabold text-gray-700 leading-relaxed">{answerText}</p>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
         </div>
     );
 }
