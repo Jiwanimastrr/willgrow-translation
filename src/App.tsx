@@ -290,28 +290,28 @@ function Ch1Flashcard({ item, onNext, onPrev, progress }: any) {
     const answerText = viewMode === 'EN' ? item.Meaning : item.Word;
 
     return (
-        <div className="flex-1 w-full flex flex-col gap-3 pt-4 pb-4 relative">
-            <span className="text-center text-sm font-bold text-gray-400">{progress}</span>
+        <div className="flex-1 w-full flex flex-col gap-2 pt-2 pb-2 relative min-h-0">
+            <span className="text-center text-xs font-bold text-gray-400 shrink-0">{progress}</span>
 
             {/* Mode Toggle */}
-            <div className="flex justify-center">
-                <div className="shadow-neu-pressed p-1.5 rounded-2xl flex gap-1">
-                    <button onClick={() => setViewMode('EN')} className={`px-5 py-2 rounded-xl text-sm font-bold transition-all ${viewMode === 'EN' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}>English</button>
-                    <button onClick={() => setViewMode('KR')} className={`px-5 py-2 rounded-xl text-sm font-bold transition-all ${viewMode === 'KR' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}>Korean</button>
+            <div className="flex justify-center shrink-0">
+                <div className="shadow-neu-pressed p-1 rounded-2xl flex gap-1">
+                    <button onClick={() => setViewMode('EN')} className={`px-4 py-1.5 rounded-xl text-sm font-bold transition-all ${viewMode === 'EN' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}>English</button>
+                    <button onClick={() => setViewMode('KR')} className={`px-4 py-1.5 rounded-xl text-sm font-bold transition-all ${viewMode === 'KR' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}>Korean</button>
                 </div>
             </div>
 
             {/* Card */}
-            <div className="neu-panel flex-1 flex flex-col p-8 relative items-center justify-center">
+            <div className="neu-panel flex-1 min-h-0 flex flex-col p-6 relative items-center justify-center">
                 <StarButton item={item} />
-                <button onClick={() => speakText(item.Word)} className="absolute top-5 left-5 neu-btn p-2 w-11 h-11" title="다시 듣기">
+                <button onClick={() => speakText(item.Word)} className="absolute top-4 left-4 neu-btn p-2 w-10 h-10" title="다시 듣기">
                     <Volume2 className="w-5 h-5 text-liquid-blue" />
                 </button>
-                <div className="text-center space-y-3">
+                <div className="text-center space-y-2">
                     <p className="text-xs font-bold text-gray-400 uppercase tracking-widest opacity-60">
                         {viewMode === 'EN' ? 'Vocabulary' : 'Definition'}
                     </p>
-                    <h2 className={`${viewMode === 'EN' ? 'text-6xl' : 'text-5xl'} font-extrabold tracking-tight text-gray-700 leading-tight`}>
+                    <h2 className={`${viewMode === 'EN' ? 'text-5xl' : 'text-4xl'} font-extrabold tracking-tight text-gray-700 leading-tight`}>
                         {questionText}
                     </h2>
                     <p className="text-xs font-bold text-gray-300 tracking-tighter uppercase">{item.Theme}</p>
@@ -319,23 +319,23 @@ function Ch1Flashcard({ item, onNext, onPrev, progress }: any) {
             </div>
 
             {/* Buttons */}
-            <div className="flex gap-4 shrink-0">
-                <button onClick={handleAction} className="neu-btn flex-1 py-4 text-lg">
+            <div className="flex gap-3 shrink-0">
+                <button onClick={handleAction} className="neu-btn flex-1 py-3 text-lg">
                     {revealed ? '다음으로 (Enter)' : '뜻 확인하기 (Enter)'}
                 </button>
-                <button onClick={onNext} className="neu-btn-blue w-20 py-4 text-base">Next</button>
+                <button onClick={onNext} className="neu-btn-blue w-20 py-3 text-base">Next</button>
             </div>
 
             {/* Answer */}
             <AnimatePresence>
                 {revealed && (
                     <motion.div
-                        initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }}
-                        className="shrink-0 w-full neu-panel p-6 shadow-neu-pressed"
+                        initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                        className="shrink-0 w-full neu-panel p-4 shadow-neu-pressed"
                     >
-                        <div className="text-center space-y-2">
+                        <div className="text-center space-y-1">
                             <span className="font-bold text-liquid-blue uppercase tracking-widest text-xs">Meaning</span>
-                            <p className={`${viewMode === 'EN' ? 'text-3xl' : 'text-4xl'} font-bold text-gray-700 leading-tight`}>
+                            <p className={`${viewMode === 'EN' ? 'text-2xl' : 'text-3xl'} font-bold text-gray-700 leading-tight`}>
                                 {answerText}
                             </p>
                         </div>
@@ -389,31 +389,31 @@ function Ch2Interpretation({ item, onNext, onPrev, progress, vocabulary }: any) 
     };
 
     return (
-        <div className="flex-1 w-full flex flex-col gap-3 pt-4 pb-4 relative">
+        <div className="flex-1 w-full flex flex-col gap-2 pt-2 pb-2 relative min-h-0">
             <audio ref={audioRef} />
-            <span className="text-center text-sm font-bold text-gray-400">{progress}</span>
+            <span className="text-center text-xs font-bold text-gray-400 shrink-0">{progress}</span>
 
             {/* Listen panel */}
-            <div className="neu-panel flex-1 flex flex-col p-8 relative items-center justify-center">
+            <div className="neu-panel flex-1 min-h-0 flex flex-col p-6 relative items-center justify-center">
                 <StarButton item={item} />
-                <div className="flex flex-col items-center gap-5">
-                    <button onClick={() => speakText(item.Sentence1 || item.Word)} className="w-24 h-24 rounded-full neu-btn">
-                        <Volume2 className="w-10 h-10 text-liquid-blue" />
+                <div className="flex flex-col items-center gap-4">
+                    <button onClick={() => speakText(item.Sentence1 || item.Word)} className="w-20 h-20 rounded-full neu-btn">
+                        <Volume2 className="w-9 h-9 text-liquid-blue" />
                     </button>
                     <p className="text-gray-400 font-bold uppercase tracking-widest text-sm">Listen and Interpret</p>
                 </div>
             </div>
 
             {/* Input */}
-            <div className="shrink-0 flex gap-3">
+            <div className="shrink-0 flex gap-2">
                 <input
                     autoFocus
-                    className="neu-input flex-1 p-5 text-xl"
+                    className="neu-input flex-1 p-4 text-lg"
                     placeholder="Type your interpretation here..."
                     value={textVal}
                     onChange={e => setTextVal(e.target.value)}
                 />
-                <button onClick={handleAction} className="neu-btn px-6 text-base font-bold">
+                <button onClick={handleAction} className="neu-btn px-5 text-sm font-bold">
                     {revealed ? '다음' : '정답 확인'}
                 </button>
                 <button onClick={onNext} className="neu-btn-blue w-16 text-base">Next</button>
@@ -423,15 +423,15 @@ function Ch2Interpretation({ item, onNext, onPrev, progress, vocabulary }: any) 
             <AnimatePresence>
                 {revealed && (
                     <motion.div
-                        initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }}
-                        className="shrink-0 w-full neu-panel p-6 text-left shadow-neu-pressed"
+                        initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                        className="shrink-0 w-full neu-panel p-4 text-left shadow-neu-pressed"
                     >
-                        <div className="space-y-2">
+                        <div className="space-y-1">
                             <span className="font-bold text-liquid-blue uppercase tracking-widest text-xs">Answer</span>
-                            <p className="text-2xl font-extrabold text-gray-700 leading-relaxed">
+                            <p className="text-xl font-extrabold text-gray-700 leading-relaxed">
                                 {renderHighlighted(item.Sentence1 || item.Word)}
                             </p>
-                            {item.Translation1 && <p className="text-base text-gray-400 font-medium">{item.Translation1}</p>}
+                            {item.Translation1 && <p className="text-sm text-gray-400 font-medium">{item.Translation1}</p>}
                         </div>
                     </motion.div>
                 )}
@@ -501,39 +501,39 @@ function Ch3Translation({ item, onNext, onPrev, progress, vocabulary }: any) {
     const answerText = viewMode === 'EN' ? (item.Translation1 || item.Meaning) : (item.Sentence1 || item.Word);
 
     return (
-        <div className="flex-1 w-full flex flex-col gap-3 pt-4 pb-4 relative">
+        <div className="flex-1 w-full flex flex-col gap-2 pt-2 pb-2 relative min-h-0">
             <audio ref={audioRef} />
-            <span className="text-center text-sm font-bold text-gray-400">{progress}</span>
+            <span className="text-center text-xs font-bold text-gray-400 shrink-0">{progress}</span>
 
             {/* Mode Toggle */}
-            <div className="flex justify-center">
-                <div className="shadow-neu-pressed p-1.5 rounded-2xl flex gap-1">
-                    <button onClick={() => setViewMode('EN')} className={`px-5 py-2 rounded-xl text-sm font-bold transition-all ${viewMode === 'EN' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}>영어 보여주기</button>
-                    <button onClick={() => setViewMode('KR')} className={`px-5 py-2 rounded-xl text-sm font-bold transition-all ${viewMode === 'KR' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}>한글 보여주기</button>
+            <div className="flex justify-center shrink-0">
+                <div className="shadow-neu-pressed p-1 rounded-2xl flex gap-1">
+                    <button onClick={() => setViewMode('EN')} className={`px-4 py-1.5 rounded-xl text-sm font-bold transition-all ${viewMode === 'EN' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}>영어 보여주기</button>
+                    <button onClick={() => setViewMode('KR')} className={`px-4 py-1.5 rounded-xl text-sm font-bold transition-all ${viewMode === 'KR' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}>한글 보여주기</button>
                 </div>
             </div>
 
             {/* Card */}
-            <div className="neu-panel flex-1 flex flex-col p-8 relative items-center justify-center">
+            <div className="neu-panel flex-1 min-h-0 flex flex-col p-6 relative items-center justify-center">
                 <StarButton item={item} />
-                <button onClick={() => speakText(item.Sentence1 || item.Word)} className="absolute top-5 left-5 neu-btn p-2 w-11 h-11" title="영어 발음 듣기">
+                <button onClick={() => speakText(item.Sentence1 || item.Word)} className="absolute top-4 left-4 neu-btn p-2 w-10 h-10" title="영어 발음 듣기">
                     <Volume2 className="w-5 h-5 text-liquid-blue" />
                 </button>
-                <h2 className="text-3xl font-extrabold text-gray-700 leading-relaxed px-8 text-center">
+                <h2 className="text-2xl font-extrabold text-gray-700 leading-relaxed px-8 text-center">
                     {renderContent(questionText, viewMode === 'EN')}
                 </h2>
             </div>
 
             {/* Input */}
-            <div className="shrink-0 flex gap-3">
+            <div className="shrink-0 flex gap-2">
                 <input
                     autoFocus
-                    className="neu-input flex-1 p-5 text-xl"
+                    className="neu-input flex-1 p-4 text-lg"
                     placeholder={viewMode === 'EN' ? "한글로 번역하세요..." : "영어로 번역하세요..."}
                     value={textVal}
                     onChange={e => setTextVal(e.target.value)}
                 />
-                <button onClick={handleAction} className="neu-btn px-6 text-base font-bold">
+                <button onClick={handleAction} className="neu-btn px-5 text-sm font-bold">
                     {revealed ? '다음' : '정답 확인'}
                 </button>
                 <button onClick={onNext} className="neu-btn-blue w-16 text-base">Next</button>
@@ -543,12 +543,12 @@ function Ch3Translation({ item, onNext, onPrev, progress, vocabulary }: any) {
             <AnimatePresence>
                 {revealed && (
                     <motion.div
-                        initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }}
-                        className="shrink-0 w-full neu-panel p-6 text-left shadow-neu-pressed"
+                        initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                        className="shrink-0 w-full neu-panel p-4 text-left shadow-neu-pressed"
                     >
-                        <div className="space-y-2">
+                        <div className="space-y-1">
                             <span className="font-bold text-liquid-blue uppercase tracking-widest text-xs">Answer</span>
-                            <p className="text-2xl font-extrabold text-gray-700 leading-relaxed">{answerText}</p>
+                            <p className="text-xl font-extrabold text-gray-700 leading-relaxed">{answerText}</p>
                         </div>
                     </motion.div>
                 )}
