@@ -11,24 +11,24 @@ function App() {
     }, []);
 
     return (
-        <div className="w-screen h-screen flex flex-col font-sans overflow-hidden">
-            {/* HEADER */}
-            <header className="h-14 w-full flex items-center justify-between px-8 bg-white shrink-0 border-b border-gray-100 z-50">
-                <h1 className="text-gray-800 font-extrabold text-lg tracking-tight">
+        <div className="w-screen h-screen flex flex-col font-sans overflow-hidden bg-neu-bg">
+            {/* HEADER - Minimal height */}
+            <header className="h-[7vh] min-h-[50px] w-full flex items-center justify-between px-8 bg-white shrink-0 border-b border-gray-100 z-50">
+                <h1 className="text-gray-800 font-extrabold text-[clamp(1rem,2.5vh,1.5rem)] tracking-tight">
                     주니어통번역사 9,8급
                 </h1>
                 {currentChapter > 0 && (
                     <button
                         onClick={() => setChapter(0)}
-                        className="neu-btn px-5 py-2 text-sm"
+                        className="neu-btn px-4 py-1.5 text-xs sm:text-sm shadow-neu-button"
                     >
                         세팅 메뉴
                     </button>
                 )}
             </header>
 
-            {/* MAIN CONTAINER — takes remaining height */}
-            <main className="flex-1 overflow-hidden">
+            {/* MAIN CONTAINER — No scrolling allowed */}
+            <main className="flex-1 overflow-hidden flex flex-col">
                 {setupError ? (
                     <div className="w-full h-full flex flex-col items-center justify-center p-8">
                         <div className="neu-panel p-10 w-full max-w-lg text-center text-red-500">
@@ -56,19 +56,19 @@ function SetupScreen() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="w-full h-full flex flex-col items-center justify-center"
+            className="w-full h-full flex flex-col items-center justify-center p-4 overflow-hidden"
         >
-            <div className="neu-panel p-10 w-[480px] flex flex-col gap-8">
-                <div className="text-center space-y-2">
-                    <h2 className="text-3xl font-extrabold tracking-tight text-gray-700">Set up Class</h2>
-                    <p className="text-sm font-medium text-gray-400">오늘 진행할 테마와 Day를 선택해주세요.</p>
+            <div className="neu-panel p-[5vh] w-full max-w-[450px] flex flex-col gap-[3vh]">
+                <div className="text-center space-y-1">
+                    <h2 className="text-[clamp(1.5rem,4vh,2.5rem)] font-extrabold tracking-tight text-gray-700">Set up Class</h2>
+                    <p className="text-[clamp(0.75rem,1.8vh,1rem)] font-medium text-gray-400">테마와 Day를 선택하세요.</p>
                 </div>
 
-                <div className="space-y-5">
-                    <div className="flex flex-col gap-2">
-                        <label className="text-sm font-bold text-gray-400 ml-2">테마 선택</label>
+                <div className="space-y-[2vh]">
+                    <div className="flex flex-col gap-1">
+                        <label className="text-xs font-bold text-gray-400 ml-2">테마 선택</label>
                         <select
-                            className="neu-input w-full cursor-pointer appearance-none"
+                            className="neu-input w-full cursor-pointer appearance-none py-[1.5vh] text-sm"
                             value={selectedTheme || ''}
                             onChange={(e) => setTheme(e.target.value)}
                         >
@@ -82,10 +82,10 @@ function SetupScreen() {
                         </select>
                     </div>
 
-                    <div className="flex flex-col gap-2">
-                        <label className="text-sm font-bold text-gray-400 ml-2">Day 선택</label>
+                    <div className="flex flex-col gap-1">
+                        <label className="text-xs font-bold text-gray-400 ml-2">Day 선택</label>
                         <select
-                            className="neu-input w-full cursor-pointer appearance-none"
+                            className="neu-input w-full cursor-pointer appearance-none py-[1.5vh] text-sm"
                             value={selectedSession || ''}
                             onChange={(e) => setSession(e.target.value)}
                         >
@@ -98,9 +98,9 @@ function SetupScreen() {
                 <button
                     disabled={!selectedTheme || !selectedSession}
                     onClick={startClass}
-                    className="neu-btn-blue w-full py-4 text-xl disabled:opacity-50"
+                    className="neu-btn-blue w-full py-[2vh] text-[clamp(1rem,2.5vh,1.5rem)] disabled:opacity-50"
                 >
-                    수업 시작하기 (Start)
+                    시작하기 (Start)
                 </button>
             </div>
         </motion.div>
@@ -109,7 +109,7 @@ function SetupScreen() {
 
 // LEARNING MODULE
 function LearningScreen() {
-    const { currentChapter, setChapter, getFilteredData, getReviewData, classDataPath } = useStore();
+    const { currentChapter, setChapter, getFilteredData, getReviewData } = useStore();
     const [data, setData] = useState<any[]>([]);
     const [idx, setIdx] = useState(0);
     const [viewMode, setViewMode] = useState<'study' | 'list'>('study');
@@ -126,7 +126,7 @@ function LearningScreen() {
     if (data.length === 0) {
         return (
             <div className="flex h-full items-center justify-center">
-                <p className="text-gray-500">해당 조건의 데이터가 없습니다.</p>
+                <p className="text-gray-500">데이터가 없습니다.</p>
             </div>
         );
     }
@@ -137,31 +137,31 @@ function LearningScreen() {
 
     return (
         <div className="w-full h-full flex flex-col items-center overflow-hidden">
-            {/* Top controls */}
-            <div className="w-full max-w-4xl px-8 pt-2 flex flex-col gap-2 shrink-0">
+            {/* Top controls - Compact */}
+            <div className="w-full max-w-4xl px-4 pt-2 flex flex-col gap-2 shrink-0">
                 <div className="flex justify-end">
                     <div className="shadow-neu-pressed p-1 rounded-2xl flex gap-1">
                         <button
                             onClick={() => setViewMode('study')}
-                            className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-sm font-bold transition-all ${viewMode === 'study' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}
+                            className={`flex items-center gap-2 px-3 py-1 rounded-xl text-xs font-bold transition-all ${viewMode === 'study' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}
                         >
-                            <BookOpen className="w-4 h-4" />학습
+                            <BookOpen className="w-3.5 h-3.5" />학습
                         </button>
                         <button
                             onClick={() => setViewMode('list')}
-                            className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-sm font-bold transition-all ${viewMode === 'list' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}
+                            className={`flex items-center gap-2 px-3 py-1 rounded-xl text-xs font-bold transition-all ${viewMode === 'list' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}
                         >
-                            <List className="w-4 h-4" />목록
+                            <List className="w-3.5 h-3.5" />목록
                         </button>
                     </div>
                 </div>
 
-                <div className="flex shadow-neu-pressed p-1 rounded-[25px] gap-1">
-                    {['1장: 어휘', '2장: 통역', '3장: 번역'].map((label, i) => (
+                <div className="flex shadow-neu-pressed p-1 rounded-[20px] gap-1">
+                    {['1장 어휘', '2장 통역', '3장 번역'].map((label, i) => (
                         <button
                             key={label}
                             onClick={() => { setChapter(i + 1); setIdx(0); setViewMode('study'); }}
-                            className={`flex-1 text-sm font-bold py-2 rounded-[20px] transition-all ${currentChapter === i + 1 ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}
+                            className={`flex-1 text-xs font-bold py-2 rounded-[16px] transition-all ${currentChapter === i + 1 ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}
                         >
                             {label}
                         </button>
@@ -169,18 +169,18 @@ function LearningScreen() {
                 </div>
             </div>
 
-            {/* Content area */}
-            <div className="flex-1 w-full flex flex-col items-center overflow-y-auto px-8 pb-10">
+            {/* Content area - Full viewport fit, center content */}
+            <div className="flex-1 w-full flex flex-col items-center justify-center p-[2vh] overflow-hidden max-w-4xl mx-auto">
                 <AnimatePresence mode="wait">
                     {viewMode === 'list' ? (
                         <GlobalListView key="list" items={data} currentChapter={currentChapter} />
                     ) : (
                         <motion.div
                             key={`chapter-${currentChapter}`}
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -20 }}
-                            className="w-full h-full max-w-4xl flex flex-col"
+                            initial={{ opacity: 0, scale: 0.98 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.98 }}
+                            className="w-full h-full flex flex-col min-h-0"
                         >
                             {currentChapter === 1 && <Ch1Flashcard item={currentItem} onNext={goNext} onPrev={goPrev} progress={`${idx + 1}/${data.length}`} />}
                             {currentChapter === 2 && <Ch2Interpretation item={currentItem} onNext={goNext} onPrev={goPrev} progress={`${idx + 1}/${data.length}`} vocabulary={data.map(d => d.Word).filter(Boolean)} />}
@@ -198,9 +198,9 @@ function StarButton({ item }: { item: any }) {
     return (
         <button
             onClick={(e) => { e.stopPropagation(); toggleStar(item.id); }}
-            className="p-2 neu-btn w-10 h-10 absolute top-5 right-5 z-10"
+            className="p-[1vh] neu-btn w-[5vh] h-[5vh] min-w-[32px] min-h-[32px] absolute top-[2vh] right-[2vh] z-10"
         >
-            <Star className={`w-5 h-5 ${item.isStarred ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} />
+            <Star className={`w-[2.5vh] h-[2.5vh] ${item.isStarred ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} />
         </button>
     );
 }
@@ -208,46 +208,36 @@ function StarButton({ item }: { item: any }) {
 function GlobalListView({ items, currentChapter }: { items: any[], currentChapter: number }) {
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="w-full max-w-4xl py-4 h-full flex flex-col overflow-hidden"
+            exit={{ opacity: 0, y: -10 }}
+            className="w-full h-full flex flex-col overflow-hidden"
         >
-            <div className="neu-panel w-full flex-1 flex flex-col overflow-hidden shadow-neu-flat">
-                <div className="p-5 border-b border-gray-200/50 flex justify-between items-center bg-white/10 shrink-0">
-                    <h3 className="font-extrabold text-lg flex items-center gap-3 text-gray-700">
-                        <List className="w-5 h-5 text-liquid-blue" />
-                        {currentChapter}장 전체 목록 ({items.length}개)
+            <div className="neu-panel w-full flex-1 flex flex-col overflow-hidden">
+                <div className="p-[2vh] border-b border-gray-200/50 flex justify-between items-center shrink-0">
+                    <h3 className="font-extrabold text-[clamp(1rem,2.5vh,1.5rem)] flex items-center gap-2 text-gray-700">
+                        <List className="w-[3vh] h-[3vh]" />
+                        {currentChapter}장 목록 ({items.length})
                     </h3>
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Click to listen</p>
                 </div>
 
-                <div className="flex-1 overflow-y-auto p-4">
-                    <div className="flex flex-col gap-3">
+                <div className="flex-1 overflow-y-auto p-[2vh]">
+                    <div className="flex flex-col gap-[1.5vh]">
                         {items.map((item, i) => {
-                            const mainText = currentChapter === 2
-                                ? (item.Translation1 || item.Meaning)
-                                : (item.Word || item.Sentence1);
-                            const subText = currentChapter === 2
-                                ? (item.Word || item.Sentence1)
-                                : (item.Meaning || item.Translation1);
-                            const audioText = item.Word || item.Sentence1;
-
+                            const mainText = currentChapter === 2 ? (item.Translation1 || item.Meaning) : (item.Word || item.Sentence1);
+                            const subText = currentChapter === 2 ? (item.Word || item.Sentence1) : (item.Meaning || item.Translation1);
                             return (
                                 <button
                                     key={item.id}
-                                    onClick={() => speakText(audioText)}
-                                    className="group w-full flex items-center gap-5 p-4 rounded-[25px] hover:shadow-neu-pressed transition-all text-left bg-neu-bg active:scale-[0.99]"
+                                    onClick={() => speakText(item.Word || item.Sentence1)}
+                                    className="group w-full flex items-center gap-[2vw] p-[2vh] rounded-[20px] hover:shadow-neu-pressed transition-all text-left bg-neu-bg"
                                 >
-                                    <div className="w-8 h-8 rounded-full shadow-neu-button flex items-center justify-center text-sm font-bold text-gray-400 group-hover:text-liquid-blue transition-colors shrink-0">
+                                    <div className="w-[4vh] h-[4vh] rounded-full shadow-neu-button flex items-center justify-center text-xs font-bold text-gray-400 shrink-0">
                                         {i + 1}
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <h4 className="font-bold text-lg text-gray-700 group-hover:text-liquid-blue transition-colors truncate">{mainText}</h4>
-                                        <p className="text-sm text-gray-400 truncate font-medium mt-0.5">{subText}</p>
-                                    </div>
-                                    <div className="shrink-0 p-2 neu-btn rounded-xl opacity-0 group-hover:opacity-100 transition-all">
-                                        <Volume2 className="w-4 h-4 text-liquid-blue" />
+                                        <h4 className="font-bold text-[clamp(0.9rem,2.2vh,1.2rem)] text-gray-700 truncate">{mainText}</h4>
+                                        <p className="text-[clamp(0.7rem,1.8vh,0.9rem)] text-gray-400 truncate">{subText}</p>
                                     </div>
                                 </button>
                             );
@@ -263,18 +253,11 @@ function GlobalListView({ items, currentChapter }: { items: any[], currentChapte
 function Ch1Flashcard({ item, onNext, onPrev, progress }: any) {
     const [revealed, setRevealed] = useState(false);
     const [viewMode, setViewMode] = useState<'EN' | 'KR'>('EN');
-    const answerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         setRevealed(false);
-        return () => { stopSpeech(); };
+        return () => stopSpeech();
     }, [item, viewMode]);
-
-    useEffect(() => {
-        if (revealed && answerRef.current) {
-            answerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-    }, [revealed]);
 
     const handleAction = () => {
         if (!revealed) setRevealed(true);
@@ -297,38 +280,43 @@ function Ch1Flashcard({ item, onNext, onPrev, progress }: any) {
     const answerText = viewMode === 'EN' ? item.Meaning : item.Word;
 
     return (
-        <div className="flex-1 w-full flex flex-col gap-2 pt-1 pb-2 relative min-h-0">
-            <span className="text-center text-xs font-bold text-gray-400 shrink-0">{progress}</span>
+        <div className="flex-1 w-full flex flex-col gap-[1.5vh] min-h-0 py-[1vh]">
+            <span className="text-center text-[1.5vh] font-bold text-gray-400 shrink-0">{progress}</span>
 
             {/* Mode Toggle */}
             <div className="flex justify-center shrink-0">
-                <div className="shadow-neu-pressed p-1 rounded-2xl flex gap-1">
-                    <button onClick={() => setViewMode('EN')} className={`px-4 py-1.5 rounded-xl text-sm font-bold transition-all ${viewMode === 'EN' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}>English</button>
-                    <button onClick={() => setViewMode('KR')} className={`px-4 py-1.5 rounded-xl text-sm font-bold transition-all ${viewMode === 'KR' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}>Korean</button>
+                <div className="shadow-neu-pressed p-1 rounded-xl flex gap-1">
+                    <button onClick={() => setViewMode('EN')} className={`px-4 py-1 rounded-lg text-xs font-bold transition-all ${viewMode === 'EN' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400'}`}>EN</button>
+                    <button onClick={() => setViewMode('KR')} className={`px-4 py-1 rounded-lg text-xs font-bold transition-all ${viewMode === 'KR' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400'}`}>KR</button>
                 </div>
             </div>
 
-            {/* Card */}
-            <div className="neu-panel flex-1 min-h-0 flex flex-col p-6 relative items-center justify-center">
+            {/* Card - Takes most space and shrinks if answer appears */}
+            <div className="neu-panel flex-1 min-h-0 flex flex-col p-[4vh] relative items-center justify-center overflow-hidden">
                 <StarButton item={item} />
-                <button onClick={() => speakText(item.Word)} className="absolute top-4 left-4 neu-btn p-2 w-10 h-10" title="다시 듣기">
-                    <Volume2 className="w-5 h-5 text-liquid-blue" />
+                <button onClick={() => speakText(item.Word)} className="absolute top-[2vh] left-[2vh] neu-btn w-[5vh] h-[5vh] min-w-[32px] min-h-[32px]">
+                    <Volume2 className="w-[2.5vh] h-[2.5vh] text-liquid-blue" />
                 </button>
-                <div className="text-center space-y-2">
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest opacity-60">
-                        {viewMode === 'EN' ? 'Vocabulary' : 'Definition'}
-                    </p>
-                    <h2 className={`${viewMode === 'EN' ? 'text-4xl' : 'text-3xl'} font-extrabold tracking-tight text-gray-700 leading-tight`}>
-                        {questionText}
-                    </h2>
-                    <p className="text-xs font-bold text-gray-300 tracking-tighter uppercase">{item.Theme}</p>
+                
+                <div className="w-full flex flex-col items-center justify-center gap-[2vh] min-h-0 h-full">
+                    <div className="text-center shrink-0">
+                        <p className="text-[1.5vh] font-extrabold text-gray-400 uppercase tracking-widest opacity-60 mb-[1vh]">
+                            {viewMode === 'EN' ? 'WORD' : 'MEANING'}
+                        </p>
+                        <h2 className="text-[clamp(1.5rem,7vh,5rem)] font-black tracking-tight text-gray-700 leading-[1.1] break-words px-4">
+                            {questionText}
+                        </h2>
+                    </div>
 
-                    {/* Answer inline */}
                     <AnimatePresence>
                         {revealed && (
-                            <motion.div ref={answerRef} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-4 border-t border-gray-200 mt-4">
-                                <span className="font-bold text-liquid-blue uppercase tracking-widest text-xs">Meaning</span>
-                                <p className={`${viewMode === 'EN' ? 'text-2xl' : 'text-3xl'} font-bold text-gray-700 leading-tight mt-1`}>
+                            <motion.div 
+                                initial={{ opacity: 0, height: 0 }} 
+                                animate={{ opacity: 1, height: 'auto' }} 
+                                className="w-full pt-[3vh] border-t border-gray-100 flex flex-col items-center min-h-0"
+                            >
+                                <span className="font-bold text-liquid-blue uppercase tracking-widest text-[1.5vh]">ANSWER</span>
+                                <p className="text-[clamp(1.2rem,5vh,3.5rem)] font-bold text-gray-600 leading-tight mt-[1vh] break-words px-4 text-center overflow-hidden">
                                     {answerText}
                                 </p>
                             </motion.div>
@@ -337,12 +325,12 @@ function Ch1Flashcard({ item, onNext, onPrev, progress }: any) {
                 </div>
             </div>
 
-            {/* Buttons */}
-            <div className="flex gap-3 shrink-0">
-                <button onClick={handleAction} className="neu-btn flex-1 py-3 text-lg">
+            {/* Action Buttons - Fixed size */}
+            <div className="flex gap-3 shrink-0 h-[8vh] max-h-[60px]">
+                <button onClick={handleAction} className="neu-btn flex-1 text-[clamp(0.9rem,2.2vh,1.2rem)] h-full">
                     {revealed ? '다음 (Enter)' : '정답확인 (Enter)'}
                 </button>
-                <button onClick={onNext} className="neu-btn-blue w-20 py-3 text-base">Next</button>
+                <button onClick={onNext} className="neu-btn-blue w-[100px] text-[clamp(0.9rem,2vh,1.1rem)] h-full">Next</button>
             </div>
         </div>
     );
@@ -353,19 +341,12 @@ function Ch2Interpretation({ item, onNext, onPrev, progress, vocabulary }: any) 
     const [revealed, setRevealed] = useState(false);
     const audioRef = useRef<HTMLAudioElement>(null);
     const [textVal, setTextVal] = useState('');
-    const answerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         setRevealed(false);
         setTextVal('');
         return () => stopSpeech();
     }, [item]);
-
-    useEffect(() => {
-        if (revealed && answerRef.current) {
-            answerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-    }, [revealed]);
 
     const handleAction = () => {
         if (!revealed) setRevealed(true);
@@ -376,7 +357,6 @@ function Ch2Interpretation({ item, onNext, onPrev, progress, vocabulary }: any) 
         const handleKey = (e: KeyboardEvent) => {
             if (document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA') {
                 if (e.code === 'Enter') { e.preventDefault(); handleAction(); }
-                if (e.code === 'ArrowLeft' && textVal === '') { onPrev(); }
                 return;
             }
             if (e.code === 'ArrowRight') { e.preventDefault(); onNext(); }
@@ -386,7 +366,7 @@ function Ch2Interpretation({ item, onNext, onPrev, progress, vocabulary }: any) 
         };
         window.addEventListener('keydown', handleKey);
         return () => window.removeEventListener('keydown', handleKey);
-    }, [item, revealed, onNext, onPrev, textVal]);
+    }, [item, revealed, onNext, onPrev]);
 
     const renderHighlighted = (sentence: string) => {
         if (!sentence) return '';
@@ -398,47 +378,49 @@ function Ch2Interpretation({ item, onNext, onPrev, progress, vocabulary }: any) 
     };
 
     return (
-        <div className="flex-1 w-full flex flex-col gap-2 pt-1 pb-2 relative min-h-0">
+        <div className="flex-1 w-full flex flex-col gap-[1.5vh] min-h-0 py-[1vh]">
             <audio ref={audioRef} />
-            <span className="text-center text-xs font-bold text-gray-400 shrink-0">{progress}</span>
+            <span className="text-center text-[1.5vh] font-bold text-gray-400 shrink-0">{progress}</span>
 
-            {/* Listen panel */}
-            <div className="neu-panel flex-1 min-h-0 flex flex-col p-6 relative items-center justify-center">
+            <div className="neu-panel flex-1 min-h-0 flex flex-col p-[4vh] relative items-center justify-center overflow-hidden">
                 <StarButton item={item} />
-                <div className="flex flex-col items-center gap-4">
-                    <button onClick={() => speakText(item.Sentence1 || item.Word)} className="w-20 h-20 rounded-full neu-btn">
-                        <Volume2 className="w-9 h-9 text-liquid-blue" />
-                    </button>
-                    <p className="text-gray-400 font-bold uppercase tracking-widest text-sm">Listen and Interpret</p>
+                <div className="flex flex-col items-center justify-center h-full w-full gap-[2vh] min-h-0">
+                    <div className="flex flex-col items-center shrink-0">
+                        <button onClick={() => speakText(item.Sentence1 || item.Word)} className="w-[12vh] h-[12vh] max-w-[100px] max-h-[100px] rounded-full neu-btn mb-[1vh]">
+                            <Volume2 className="w-[6vh] h-[6vh] max-w-[50px] max-h-[50px] text-liquid-blue" />
+                        </button>
+                        <p className="text-[1.5vh] font-bold text-gray-400 uppercase tracking-widest">Listen & Interpret</p>
+                    </div>
 
-                    {/* Answer inline */}
                     <AnimatePresence>
                         {revealed && (
-                            <motion.div ref={answerRef} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-3 border-t border-gray-200 mt-2 w-full text-center">
-                                <span className="font-bold text-liquid-blue uppercase tracking-widest text-xs">Answer</span>
-                                <p className="text-xl font-extrabold text-gray-700 leading-relaxed mt-1">
+                            <motion.div 
+                                initial={{ opacity: 0, height: 0 }} 
+                                animate={{ opacity: 1, height: 'auto' }} 
+                                className="w-full pt-[3vh] border-t border-gray-100 text-center min-h-0 overflow-hidden"
+                            >
+                                <span className="font-bold text-liquid-blue uppercase tracking-widest text-[1.5vh]">ANSWER</span>
+                                <p className="text-[clamp(1.1rem,4vh,2.5rem)] font-extrabold text-gray-700 leading-tight mt-[1vh] break-words px-4">
                                     {renderHighlighted(item.Sentence1 || item.Word)}
                                 </p>
-                                {item.Translation1 && <p className="text-sm text-gray-400 font-medium mt-1">{item.Translation1}</p>}
+                                {item.Translation1 && <p className="text-[clamp(0.9rem,2.5vh,1.5rem)] text-gray-400 font-medium mt-[1vh] break-words px-4">{item.Translation1}</p>}
                             </motion.div>
                         )}
                     </AnimatePresence>
                 </div>
             </div>
 
-            {/* Input */}
-            <div className="shrink-0 flex gap-2">
+            <div className="shrink-0 flex gap-2 h-[8vh] max-h-[60px]">
                 <input
                     autoFocus
-                    className="neu-input flex-1 p-3 text-lg"
+                    className="neu-input flex-1 p-3 text-[clamp(0.9rem,2.2vh,1.2rem)] h-full"
                     placeholder="Type interpretation..."
                     value={textVal}
                     onChange={e => setTextVal(e.target.value)}
                 />
-                <button onClick={handleAction} className="neu-btn px-4 text-sm font-bold">
-                    {revealed ? '다음' : '정답확인'}
+                <button onClick={handleAction} className="neu-btn px-6 text-[clamp(0.9rem,2vh,1.1rem)] h-full">
+                    {revealed ? '다음' : '확인'}
                 </button>
-                <button onClick={onNext} className="neu-btn-blue w-16 text-base">Next</button>
             </div>
         </div>
     );
@@ -450,19 +432,12 @@ function Ch3Translation({ item, onNext, onPrev, progress, vocabulary }: any) {
     const audioRef = useRef<HTMLAudioElement>(null);
     const [textVal, setTextVal] = useState('');
     const [viewMode, setViewMode] = useState<'EN' | 'KR'>('EN');
-    const answerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         setRevealed(false);
         setTextVal('');
         return () => stopSpeech();
     }, [item, viewMode]);
-
-    useEffect(() => {
-        if (revealed && answerRef.current) {
-            answerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-    }, [revealed]);
 
     const handleAction = () => {
         if (!revealed) setRevealed(true);
@@ -477,16 +452,15 @@ function Ch3Translation({ item, onNext, onPrev, progress, vocabulary }: any) {
                 if (isInputMode && textVal !== '') return;
                 e.preventDefault(); onPrev();
             }
-            else if (e.code === 'ArrowDown') { e.preventDefault(); speakText(item.Sentence1 || item.Word); }
-            else if (e.code === 'Space') {
-                if (isInputMode) return;
+            else if (e.code === 'ArrowDown' || e.code === 'Space') {
+                if (isInputMode && e.code === 'Space') return;
                 e.preventDefault(); speakText(item.Sentence1 || item.Word);
             }
             else if (e.code === 'Enter') { e.preventDefault(); handleAction(); }
         };
         window.addEventListener('keydown', handleKey);
         return () => window.removeEventListener('keydown', handleKey);
-    }, [item, revealed, onNext, onPrev, viewMode, textVal]);
+    }, [item, revealed, onNext, onPrev, textVal]);
 
     const renderContent = (sentence: string, isEnglish: boolean) => {
         if (!sentence) return '';
@@ -498,7 +472,7 @@ function Ch3Translation({ item, onNext, onPrev, progress, vocabulary }: any) {
                 return (
                     <span key={i} className="group relative inline-block border-b border-dashed border-gray-400 cursor-help">
                         <span className="font-semibold text-liquid-blue">{w}</span>
-                        <div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-xs opacity-0 group-hover:opacity-100 transition-opacity bg-black text-white text-xs rounded shadow-lg px-3 py-2 z-50">
+                        <div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-xs opacity-0 group-hover:opacity-100 transition-opacity bg-black text-white text-xs rounded shadow-lg px-2 py-1 z-50">
                             {vocabData.Meaning}
                         </div>
                     </span>
@@ -512,54 +486,58 @@ function Ch3Translation({ item, onNext, onPrev, progress, vocabulary }: any) {
     const answerText = viewMode === 'EN' ? (item.Translation1 || item.Meaning) : (item.Sentence1 || item.Word);
 
     return (
-        <div className="flex-1 w-full flex flex-col gap-2 pt-1 pb-2 relative min-h-0">
+        <div className="flex-1 w-full flex flex-col gap-[1.5vh] min-h-0 py-[1vh]">
             <audio ref={audioRef} />
-            <span className="text-center text-xs font-bold text-gray-400 shrink-0">{progress}</span>
+            <span className="text-center text-[1.5vh] font-bold text-gray-400 shrink-0">{progress}</span>
 
-            {/* Mode Toggle */}
             <div className="flex justify-center shrink-0">
-                <div className="shadow-neu-pressed p-1 rounded-2xl flex gap-1">
-                    <button onClick={() => setViewMode('EN')} className={`px-4 py-1.5 rounded-xl text-sm font-bold transition-all ${viewMode === 'EN' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}>English</button>
-                    <button onClick={() => setViewMode('KR')} className={`px-4 py-1.5 rounded-xl text-sm font-bold transition-all ${viewMode === 'KR' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}>Korean</button>
+                <div className="shadow-neu-pressed p-1 rounded-xl flex gap-1">
+                    <button onClick={() => setViewMode('EN')} className={`px-4 py-1 rounded-lg text-xs font-bold transition-all ${viewMode === 'EN' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400'}`}>EN</button>
+                    <button onClick={() => setViewMode('KR')} className={`px-4 py-1 rounded-lg text-xs font-bold transition-all ${viewMode === 'KR' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400'}`}>KR</button>
                 </div>
             </div>
 
-            {/* Card */}
-            <div className="neu-panel flex-1 min-h-0 flex flex-col p-6 relative items-center justify-center">
+            <div className="neu-panel flex-1 min-h-0 flex flex-col p-[4vh] relative items-center justify-center overflow-hidden">
                 <StarButton item={item} />
-                <button onClick={() => speakText(item.Sentence1 || item.Word)} className="absolute top-4 left-4 neu-btn p-2 w-10 h-10" title="영어 발음 듣기">
-                    <Volume2 className="w-5 h-5 text-liquid-blue" />
+                <button onClick={() => speakText(item.Sentence1 || item.Word)} className="absolute top-[2vh] left-[2vh] neu-btn w-[5vh] h-[5vh] min-w-[32px] min-h-[32px]">
+                    <Volume2 className="w-[2.5vh] h-[2.5vh] text-liquid-blue" />
                 </button>
-                <div className="text-center px-8">
-                    <h2 className="text-2xl font-extrabold text-gray-700 leading-relaxed">
-                        {renderContent(questionText, viewMode === 'EN')}
-                    </h2>
 
-                    {/* Answer inline */}
+                <div className="w-full flex flex-col items-center justify-center gap-[2vh] h-full min-h-0">
+                    <div className="text-center shrink-0">
+                        <h2 className="text-[clamp(1.1rem,4.5vh,3rem)] font-extrabold text-gray-700 leading-tight break-words px-4">
+                            {renderContent(questionText, viewMode === 'EN')}
+                        </h2>
+                    </div>
+
                     <AnimatePresence>
                         {revealed && (
-                            <motion.div ref={answerRef} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-3 border-t border-gray-200 mt-4">
-                                <span className="font-bold text-liquid-blue uppercase tracking-widest text-xs">Answer</span>
-                                <p className="text-xl font-extrabold text-gray-700 leading-relaxed mt-1">{answerText}</p>
+                            <motion.div 
+                                initial={{ opacity: 0, height: 0 }} 
+                                animate={{ opacity: 1, height: 'auto' }} 
+                                className="w-full pt-[3vh] border-t border-gray-100 text-center min-h-0 overflow-hidden"
+                            >
+                                <span className="font-bold text-liquid-blue uppercase tracking-widest text-[1.5vh]">ANSWER</span>
+                                <p className="text-[clamp(1rem,4vh,2.5rem)] font-extrabold text-gray-600 leading-tight mt-[1vh] break-words px-4">
+                                    {answerText}
+                                </p>
                             </motion.div>
                         )}
                     </AnimatePresence>
                 </div>
             </div>
 
-            {/* Input */}
-            <div className="shrink-0 flex gap-2">
+            <div className="shrink-0 flex gap-2 h-[8vh] max-h-[60px]">
                 <input
                     autoFocus
-                    className="neu-input flex-1 p-3 text-lg"
+                    className="neu-input flex-1 p-3 text-[clamp(0.9rem,2.2vh,1.2rem)] h-full"
                     placeholder="Translate..."
                     value={textVal}
                     onChange={e => setTextVal(e.target.value)}
                 />
-                <button onClick={handleAction} className="neu-btn px-4 text-sm font-bold">
-                    {revealed ? '다음' : '정답확인'}
+                <button onClick={handleAction} className="neu-btn px-6 text-[clamp(0.9rem,2vh,1.1rem)] h-full">
+                    {revealed ? '다음' : '확인'}
                 </button>
-                <button onClick={onNext} className="neu-btn-blue w-14 text-base">Next</button>
             </div>
         </div>
     );
