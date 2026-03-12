@@ -262,12 +262,16 @@ export const useStore = create<AppState>((set, get) => ({
     })),
 
     getFilteredData: () => {
-        const { excelData, selectedTheme } = get();
+        const { excelData, selectedTheme, selectedSession } = get();
         const filtered = excelData.filter(d =>
             !selectedTheme || d.Theme === selectedTheme
         );
-        // 사용자 요청: 14개씩만 하도록 수정
-        return filtered.slice(0, 14);
+        
+        // 사용자 요청: 차시(Day)별로 14개씩 이어서 가져오도록 수정
+        // 1차시: 1-14번, 2차시: 15-28번, 3차시: 29-42번...
+        const sessionNum = parseInt(selectedSession || '1', 10);
+        const startIdx = (sessionNum - 1) * 14;
+        return filtered.slice(startIdx, startIdx + 14);
     },
 
     getReviewData: () => {

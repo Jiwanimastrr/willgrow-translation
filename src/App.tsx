@@ -15,8 +15,13 @@ function App() {
             {/* HEADER */}
             <header className="h-16 w-full flex items-center justify-between px-6 bg-white/50 backdrop-blur-md border-b border-gray-200/50 dark:bg-black/50 dark:border-white/10 shrink-0 select-none z-50 fixed top-0 left-0">
                 <div className="flex items-center gap-3">
-                    <h1 className="text-liquid-blue font-bold text-xl tracking-tight">
-                        주니어통번역사 9,8급
+                    {useStore.getState().logoSrc ? (
+                        <img src={useStore.getState().logoSrc!} alt="Logo" className="h-8 object-contain" />
+                    ) : (
+                        <div className="font-bold text-lg text-liquid-blue tracking-tighter">Willgrow Language</div>
+                    )}
+                    <h1 className="text-gray-900 dark:text-gray-100 font-semibold ml-2">
+                        8,9급 통번역 훈련
                     </h1>
                 </div>
 
@@ -66,7 +71,7 @@ function SetupScreen() {
             <div className="liquid-panel p-10 w-[500px] flex flex-col gap-8 shadow-2xl">
                 <div className="text-center space-y-2 mb-4">
                     <h2 className="text-3xl font-bold tracking-tight">Set up Class</h2>
-                    <p className="text-sm text-gray-500">오늘 진행할 테마와 Day를 선택해주세요.</p>
+                    <p className="text-sm text-gray-500">오늘 진행할 테마와 차시를 선택해주세요.</p>
                 </div>
 
                 <div className="space-y-4">
@@ -79,19 +84,23 @@ function SetupScreen() {
                         >
                             <option value="" disabled>1. 테마를 선택하세요</option>
                             {themes.length === 0 && <option value="Default Theme">기본 테마</option>}
-                            {themes.map(t => <option key={t} value={t}>{t}</option>)}
+                            {themes.map(t => (
+                                <option key={t} value={t}>
+                                    {t.charAt(0).toUpperCase() + t.slice(1)}
+                                </option>
+                            ))}
                         </select>
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Day 선택</label>
+                        <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">차시 선택</label>
                         <select
                             className="w-full p-4 rounded-xl bg-white/60 dark:bg-black/60 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-liquid-blue outline-none transition-all cursor-pointer"
                             value={selectedSession || ''}
                             onChange={(e) => setSession(e.target.value)}
                         >
-                            <option value="" disabled>2. Day를 선택하세요</option>
-                            {[1, 2, 3].map(s => <option key={s} value={s}>Day {s}</option>)}
+                            <option value="" disabled>2. 차시를 선택하세요</option>
+                            {[1, 2, 3, 4, 13, 14].map(s => <option key={s} value={s}>{s}차시</option>)}
                         </select>
                     </div>
                 </div>
