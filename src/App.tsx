@@ -138,30 +138,30 @@ function LearningScreen() {
     return (
         <div className="w-full h-full flex flex-col items-center overflow-hidden">
             {/* Top controls */}
-            <div className="w-full max-w-4xl px-8 pt-4 flex flex-col gap-3 shrink-0">
+            <div className="w-full max-w-4xl px-8 pt-2 flex flex-col gap-2 shrink-0">
                 <div className="flex justify-end">
-                    <div className="shadow-neu-pressed p-1.5 rounded-2xl flex gap-1">
+                    <div className="shadow-neu-pressed p-1 rounded-2xl flex gap-1">
                         <button
                             onClick={() => setViewMode('study')}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${viewMode === 'study' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}
+                            className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-sm font-bold transition-all ${viewMode === 'study' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}
                         >
-                            <BookOpen className="w-4 h-4" />학습 모드
+                            <BookOpen className="w-4 h-4" />학습
                         </button>
                         <button
                             onClick={() => setViewMode('list')}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${viewMode === 'list' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}
+                            className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-sm font-bold transition-all ${viewMode === 'list' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}
                         >
-                            <List className="w-4 h-4" />리스트 보기
+                            <List className="w-4 h-4" />목록
                         </button>
                     </div>
                 </div>
 
-                <div className="flex shadow-neu-pressed p-1.5 rounded-[30px] gap-2">
-                    {['1장: 어휘 (Flashcard)', '2장: 통역 (Interpretation)', '3장: 번역 (Translation)'].map((label, i) => (
+                <div className="flex shadow-neu-pressed p-1 rounded-[25px] gap-1">
+                    {['1장: 어휘', '2장: 통역', '3장: 번역'].map((label, i) => (
                         <button
                             key={label}
                             onClick={() => { setChapter(i + 1); setIdx(0); setViewMode('study'); }}
-                            className={`flex-1 text-sm font-bold py-3 rounded-[25px] transition-all ${currentChapter === i + 1 ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}
+                            className={`flex-1 text-sm font-bold py-2 rounded-[20px] transition-all ${currentChapter === i + 1 ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}
                         >
                             {label}
                         </button>
@@ -169,8 +169,8 @@ function LearningScreen() {
                 </div>
             </div>
 
-            {/* Content area — fills remaining space */}
-            <div className="flex-1 w-full flex flex-col items-center overflow-hidden px-8">
+            {/* Content area */}
+            <div className="flex-1 w-full flex flex-col items-center overflow-y-auto px-8 pb-10">
                 <AnimatePresence mode="wait">
                     {viewMode === 'list' ? (
                         <GlobalListView key="list" items={data} currentChapter={currentChapter} />
@@ -263,11 +263,18 @@ function GlobalListView({ items, currentChapter }: { items: any[], currentChapte
 function Ch1Flashcard({ item, onNext, onPrev, progress }: any) {
     const [revealed, setRevealed] = useState(false);
     const [viewMode, setViewMode] = useState<'EN' | 'KR'>('EN');
+    const answerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         setRevealed(false);
         return () => { stopSpeech(); };
     }, [item, viewMode]);
+
+    useEffect(() => {
+        if (revealed && answerRef.current) {
+            answerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }, [revealed]);
 
     const handleAction = () => {
         if (!revealed) setRevealed(true);
@@ -290,7 +297,7 @@ function Ch1Flashcard({ item, onNext, onPrev, progress }: any) {
     const answerText = viewMode === 'EN' ? item.Meaning : item.Word;
 
     return (
-        <div className="flex-1 w-full flex flex-col gap-2 pt-2 pb-2 relative min-h-0">
+        <div className="flex-1 w-full flex flex-col gap-2 pt-1 pb-2 relative min-h-0">
             <span className="text-center text-xs font-bold text-gray-400 shrink-0">{progress}</span>
 
             {/* Mode Toggle */}
@@ -311,7 +318,7 @@ function Ch1Flashcard({ item, onNext, onPrev, progress }: any) {
                     <p className="text-xs font-bold text-gray-400 uppercase tracking-widest opacity-60">
                         {viewMode === 'EN' ? 'Vocabulary' : 'Definition'}
                     </p>
-                    <h2 className={`${viewMode === 'EN' ? 'text-5xl' : 'text-4xl'} font-extrabold tracking-tight text-gray-700 leading-tight`}>
+                    <h2 className={`${viewMode === 'EN' ? 'text-4xl' : 'text-3xl'} font-extrabold tracking-tight text-gray-700 leading-tight`}>
                         {questionText}
                     </h2>
                     <p className="text-xs font-bold text-gray-300 tracking-tighter uppercase">{item.Theme}</p>
@@ -319,7 +326,7 @@ function Ch1Flashcard({ item, onNext, onPrev, progress }: any) {
                     {/* Answer inline */}
                     <AnimatePresence>
                         {revealed && (
-                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-4 border-t border-gray-200 mt-4">
+                            <motion.div ref={answerRef} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-4 border-t border-gray-200 mt-4">
                                 <span className="font-bold text-liquid-blue uppercase tracking-widest text-xs">Meaning</span>
                                 <p className={`${viewMode === 'EN' ? 'text-2xl' : 'text-3xl'} font-bold text-gray-700 leading-tight mt-1`}>
                                     {answerText}
@@ -333,7 +340,7 @@ function Ch1Flashcard({ item, onNext, onPrev, progress }: any) {
             {/* Buttons */}
             <div className="flex gap-3 shrink-0">
                 <button onClick={handleAction} className="neu-btn flex-1 py-3 text-lg">
-                    {revealed ? '다음으로 (Enter)' : '뜻 확인하기 (Enter)'}
+                    {revealed ? '다음 (Enter)' : '정답확인 (Enter)'}
                 </button>
                 <button onClick={onNext} className="neu-btn-blue w-20 py-3 text-base">Next</button>
             </div>
@@ -346,12 +353,19 @@ function Ch2Interpretation({ item, onNext, onPrev, progress, vocabulary }: any) 
     const [revealed, setRevealed] = useState(false);
     const audioRef = useRef<HTMLAudioElement>(null);
     const [textVal, setTextVal] = useState('');
+    const answerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         setRevealed(false);
         setTextVal('');
         return () => stopSpeech();
     }, [item]);
+
+    useEffect(() => {
+        if (revealed && answerRef.current) {
+            answerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }, [revealed]);
 
     const handleAction = () => {
         if (!revealed) setRevealed(true);
@@ -384,7 +398,7 @@ function Ch2Interpretation({ item, onNext, onPrev, progress, vocabulary }: any) 
     };
 
     return (
-        <div className="flex-1 w-full flex flex-col gap-2 pt-2 pb-2 relative min-h-0">
+        <div className="flex-1 w-full flex flex-col gap-2 pt-1 pb-2 relative min-h-0">
             <audio ref={audioRef} />
             <span className="text-center text-xs font-bold text-gray-400 shrink-0">{progress}</span>
 
@@ -400,7 +414,7 @@ function Ch2Interpretation({ item, onNext, onPrev, progress, vocabulary }: any) 
                     {/* Answer inline */}
                     <AnimatePresence>
                         {revealed && (
-                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-4 border-t border-gray-200 mt-2 w-full text-center">
+                            <motion.div ref={answerRef} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-3 border-t border-gray-200 mt-2 w-full text-center">
                                 <span className="font-bold text-liquid-blue uppercase tracking-widest text-xs">Answer</span>
                                 <p className="text-xl font-extrabold text-gray-700 leading-relaxed mt-1">
                                     {renderHighlighted(item.Sentence1 || item.Word)}
@@ -416,13 +430,13 @@ function Ch2Interpretation({ item, onNext, onPrev, progress, vocabulary }: any) 
             <div className="shrink-0 flex gap-2">
                 <input
                     autoFocus
-                    className="neu-input flex-1 p-4 text-lg"
-                    placeholder="Type your interpretation here..."
+                    className="neu-input flex-1 p-3 text-lg"
+                    placeholder="Type interpretation..."
                     value={textVal}
                     onChange={e => setTextVal(e.target.value)}
                 />
-                <button onClick={handleAction} className="neu-btn px-5 text-sm font-bold">
-                    {revealed ? '다음' : '정답 확인'}
+                <button onClick={handleAction} className="neu-btn px-4 text-sm font-bold">
+                    {revealed ? '다음' : '정답확인'}
                 </button>
                 <button onClick={onNext} className="neu-btn-blue w-16 text-base">Next</button>
             </div>
@@ -436,12 +450,19 @@ function Ch3Translation({ item, onNext, onPrev, progress, vocabulary }: any) {
     const audioRef = useRef<HTMLAudioElement>(null);
     const [textVal, setTextVal] = useState('');
     const [viewMode, setViewMode] = useState<'EN' | 'KR'>('EN');
+    const answerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         setRevealed(false);
         setTextVal('');
         return () => stopSpeech();
     }, [item, viewMode]);
+
+    useEffect(() => {
+        if (revealed && answerRef.current) {
+            answerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }, [revealed]);
 
     const handleAction = () => {
         if (!revealed) setRevealed(true);
@@ -491,15 +512,15 @@ function Ch3Translation({ item, onNext, onPrev, progress, vocabulary }: any) {
     const answerText = viewMode === 'EN' ? (item.Translation1 || item.Meaning) : (item.Sentence1 || item.Word);
 
     return (
-        <div className="flex-1 w-full flex flex-col gap-2 pt-2 pb-2 relative min-h-0">
+        <div className="flex-1 w-full flex flex-col gap-2 pt-1 pb-2 relative min-h-0">
             <audio ref={audioRef} />
             <span className="text-center text-xs font-bold text-gray-400 shrink-0">{progress}</span>
 
             {/* Mode Toggle */}
             <div className="flex justify-center shrink-0">
                 <div className="shadow-neu-pressed p-1 rounded-2xl flex gap-1">
-                    <button onClick={() => setViewMode('EN')} className={`px-4 py-1.5 rounded-xl text-sm font-bold transition-all ${viewMode === 'EN' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}>영어 보여주기</button>
-                    <button onClick={() => setViewMode('KR')} className={`px-4 py-1.5 rounded-xl text-sm font-bold transition-all ${viewMode === 'KR' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}>한글 보여주기</button>
+                    <button onClick={() => setViewMode('EN')} className={`px-4 py-1.5 rounded-xl text-sm font-bold transition-all ${viewMode === 'EN' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}>English</button>
+                    <button onClick={() => setViewMode('KR')} className={`px-4 py-1.5 rounded-xl text-sm font-bold transition-all ${viewMode === 'KR' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}>Korean</button>
                 </div>
             </div>
 
@@ -517,7 +538,7 @@ function Ch3Translation({ item, onNext, onPrev, progress, vocabulary }: any) {
                     {/* Answer inline */}
                     <AnimatePresence>
                         {revealed && (
-                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-4 border-t border-gray-200 mt-4">
+                            <motion.div ref={answerRef} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-3 border-t border-gray-200 mt-4">
                                 <span className="font-bold text-liquid-blue uppercase tracking-widest text-xs">Answer</span>
                                 <p className="text-xl font-extrabold text-gray-700 leading-relaxed mt-1">{answerText}</p>
                             </motion.div>
@@ -530,15 +551,15 @@ function Ch3Translation({ item, onNext, onPrev, progress, vocabulary }: any) {
             <div className="shrink-0 flex gap-2">
                 <input
                     autoFocus
-                    className="neu-input flex-1 p-4 text-lg"
-                    placeholder={viewMode === 'EN' ? "한글로 번역하세요..." : "영어로 번역하세요..."}
+                    className="neu-input flex-1 p-3 text-lg"
+                    placeholder="Translate..."
                     value={textVal}
                     onChange={e => setTextVal(e.target.value)}
                 />
-                <button onClick={handleAction} className="neu-btn px-5 text-sm font-bold">
-                    {revealed ? '다음' : '정답 확인'}
+                <button onClick={handleAction} className="neu-btn px-4 text-sm font-bold">
+                    {revealed ? '다음' : '정답확인'}
                 </button>
-                <button onClick={onNext} className="neu-btn-blue w-16 text-base">Next</button>
+                <button onClick={onNext} className="neu-btn-blue w-14 text-base">Next</button>
             </div>
         </div>
     );
