@@ -11,7 +11,7 @@ function App() {
     }, []);
 
     return (
-        <div className="w-full h-full relative overflow-hidden flex flex-col font-sans">
+        <div className="w-full relative flex flex-col font-sans mb-20">
             {/* HEADER */}
             <header className="h-16 w-full flex items-center justify-between px-8 bg-white shrink-0 fixed top-0 left-0 z-50 border-b border-gray-100">
                 <div className="flex items-center gap-3">
@@ -33,7 +33,7 @@ function App() {
             </header>
 
             {/* MAIN CONTAINER */}
-            <main className="flex-1 mt-16 overflow-y-auto">
+            <main className="mt-16">
                 {setupError ? (
                     <div className="w-full h-full flex flex-col items-center justify-center p-8">
                         <div className="neu-panel p-10 max-sm w-full text-center text-red-500">

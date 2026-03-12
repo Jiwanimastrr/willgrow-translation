@@ -18,7 +18,25 @@
 }
 
 body {
-  @apply bg-neu-bg text-gray-800 transition-colors duration-300 antialiased overflow-hidden select-none;
+  @apply bg-neu-bg text-gray-800 transition-colors duration-300 antialiased select-none;
+}
+
+/* Custom Scrollbar for better UI */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #f0f0f0;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #e0e0e0;
 }
 
 #root {
