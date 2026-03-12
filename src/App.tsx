@@ -321,8 +321,7 @@ function Ch1Flashcard({ item, onNext, onPrev, progress }: any) {
     }, [item, viewMode]);
 
     const handleAction = () => {
-        if (!revealed) setRevealed(true);
-        else onNext();
+        setRevealed(!revealed);
     };
 
     // 키보드 단축키: 스페이스·↓ = 다시 읽기, 엔터 = 정답공개/다음, → = 다음(Skip), ← = 이전
@@ -467,8 +466,7 @@ function Ch2Interpretation({ item, onNext, onPrev, progress, vocabulary }: any) 
     }, [item]);
 
     const handleAction = () => {
-        if (!revealed) setRevealed(true);
-        else onNext();
+        setRevealed(!revealed);
     };
 
     // 키보드 단축키
@@ -579,8 +577,7 @@ function Ch3Translation({ item, onNext, onPrev, progress, vocabulary }: any) {
     }, [item, viewMode]);
 
     const handleAction = () => {
-        if (!revealed) setRevealed(true);
-        else onNext();
+        setRevealed(!revealed);
     };
 
     // 3장 번역 단축키 처리
