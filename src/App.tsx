@@ -89,14 +89,14 @@ function SetupScreen() {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">차시 선택</label>
+                        <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Day 선택</label>
                         <select
                             className="w-full p-4 rounded-xl bg-white/60 dark:bg-black/60 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-liquid-blue outline-none transition-all cursor-pointer"
                             value={selectedSession || ''}
                             onChange={(e) => setSession(e.target.value)}
                         >
-                            <option value="" disabled>2. 차시를 선택하세요</option>
-                            {[1, 2, 3, 4, 13, 14].map(s => <option key={s} value={s}>{s}차시</option>)}
+                            <option value="" disabled>2. Day를 선택하세요</option>
+                            {[1, 2, 3].map(s => <option key={s} value={s}>Day {s}</option>)}
                         </select>
                     </div>
                 </div>

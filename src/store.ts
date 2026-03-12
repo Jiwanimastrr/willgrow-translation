@@ -263,9 +263,11 @@ export const useStore = create<AppState>((set, get) => ({
 
     getFilteredData: () => {
         const { excelData, selectedTheme } = get();
-        return excelData.filter(d =>
+        const filtered = excelData.filter(d =>
             !selectedTheme || d.Theme === selectedTheme
         );
+        // 사용자 요청: 14개씩만 하도록 수정
+        return filtered.slice(0, 14);
     },
 
     getReviewData: () => {
