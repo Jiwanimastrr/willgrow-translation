@@ -223,41 +223,7 @@ function LearningScreen() {
 // COMPONENTS SUPPORTING VARIOUS CHAPTERS
 // ----------------------------------------------------
 
-function useGlobalHotkeys(audioRef: React.RefObject<HTMLAudioElement | null>, doAction: () => void, enableReplay: boolean = true) {
-    useEffect(() => {
-        const handleKey = (e: KeyboardEvent) => {
-            // Inputs checking
-            if (document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA') {
-                // If Enter is pressed inside an input, maybe bubble up
-                if (e.key === 'Enter') {
-                    doAction();
-                    e.preventDefault();
-                }
-                return;
-            }
 
-            if (e.code === 'Space') {
-                e.preventDefault();
-                if (audioRef.current) {
-                    if (audioRef.current.paused) audioRef.current.play();
-                    else audioRef.current.pause();
-                }
-            } else if (e.code === 'Enter') {
-                e.preventDefault();
-                doAction(); // either reveal answer or go next
-            } else if (e.code === 'ArrowDown' && enableReplay) {
-                // Replay audio
-                e.preventDefault();
-                if (audioRef.current) {
-                    audioRef.current.currentTime = 0;
-                    audioRef.current.play();
-                }
-            }
-        };
-        window.addEventListener('keydown', handleKey);
-        return () => window.removeEventListener('keydown', handleKey);
-    }, [doAction, audioRef, enableReplay]);
-}
 
 function StarButton({ item }: { item: any }) {
     const { toggleStar } = useStore();
