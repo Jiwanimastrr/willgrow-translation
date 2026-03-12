@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Star, Volume2, List, BookOpen } from 'lucide-react';
 
 function App() {
-    const { initialize, setupError, logoSrc, currentChapter, setChapter } = useStore();
+    const { initialize, setupError, currentChapter, setChapter } = useStore();
 
     useEffect(() => {
         initialize();
@@ -15,13 +15,8 @@ function App() {
             {/* HEADER */}
             <header className="h-16 w-full flex items-center justify-between px-6 bg-white/50 backdrop-blur-md border-b border-gray-200/50 dark:bg-black/50 dark:border-white/10 shrink-0 select-none z-50 fixed top-0 left-0">
                 <div className="flex items-center gap-3">
-                    {logoSrc ? (
-                        <img src={logoSrc} alt="Logo" className="h-8 object-contain" />
-                    ) : (
-                        <div className="font-bold text-lg text-liquid-blue tracking-tighter">Willgrow Language</div>
-                    )}
-                    <h1 className="text-gray-900 dark:text-gray-100 font-semibold ml-2">
-                        8,9급 통번역 훈련
+                    <h1 className="text-liquid-blue font-bold text-xl tracking-tight">
+                        주니어통번역사 9,8급
                     </h1>
                 </div>
 
