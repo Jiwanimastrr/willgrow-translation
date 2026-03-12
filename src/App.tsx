@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useStore, speakText, stopSpeech } from './store';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, Volume2, List, BookOpen } from 'lucide-react';
