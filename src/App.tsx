@@ -168,7 +168,7 @@ function LearningScreen() {
                 </div>
 
                 <div className="flex rounded-full bg-gray-200/50 dark:bg-white/5 p-1 backdrop-blur-md">
-                    {['1장: 어휘 (Flashcard)', '2장: 통역 (Interpretation)', '3장: 번역 (Translation)', '4장: 모의고사 (Test)'].map((label, i) => (
+                    {['1장: 어휘 (Flashcard)', '2장: 통역 (Interpretation)', '3장: 번역 (Translation)'].map((label, i) => (
                         <button
                             key={label}
                             onClick={() => {
@@ -202,7 +202,6 @@ function LearningScreen() {
                             {currentChapter === 1 && <Ch1Flashcard item={currentItem} path={classDataPath!} onNext={goNext} progress={`${idx + 1}/${data.length}`} />}
                             {currentChapter === 2 && <Ch2Interpretation item={currentItem} path={classDataPath!} onNext={goNext} progress={`${idx + 1}/${data.length}`} vocabulary={data.map(d => d.Word).filter(Boolean)} />}
                             {currentChapter === 3 && <Ch3Translation item={currentItem} path={classDataPath!} onNext={goNext} progress={`${idx + 1}/${data.length}`} vocabulary={data} />}
-                            {currentChapter === 4 && <Ch4Exam items={data} />}
                         </motion.div>
                     )}
                 </AnimatePresence>
@@ -715,84 +714,6 @@ function Ch3Translation({ item, onNext, progress, vocabulary }: any) {
     );
 }
 
-// Ch4 Exam
-function Ch4Exam({ items }: any) {
-    const [idx, setIdx] = useState(0);
-    const [timeLeft, setTimeLeft] = useState(1200); // 20 minutes
-    const audioRef = useRef<HTMLAudioElement>(null);
 
-    useEffect(() => {
-        const t = setInterval(() => {
-            setTimeLeft(prev => Math.max(0, prev - 1));
-        }, 1000);
-        return () => clearInterval(t);
-    }, []);
-
-    const item = items[idx];
-
-    const handleAction = () => {
-        if (idx < items.length - 1) setIdx(idx + 1);
-    };
-
-    // 4장 모의고사에서도 방향키/스페이스바 음성 지원
-    useEffect(() => {
-        const handleKey = (e: KeyboardEvent) => {
-            if (document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA') {
-                if (e.code === 'Enter') {
-                    e.preventDefault();
-                    handleAction();
-                }
-                return;
-            }
-            if (e.code === 'ArrowDown' || e.code === 'Space') {
-                e.preventDefault();
-                speakText(item.Sentence1 || item.Word);
-            } else if (e.code === 'Enter') {
-                e.preventDefault();
-                handleAction();
-            }
-        };
-        window.addEventListener('keydown', handleKey);
-        return () => window.removeEventListener('keydown', handleKey);
-    }, [item, idx, items.length]);
-
-    const mins = Math.floor(timeLeft / 60);
-    const secs = timeLeft % 60;
-
-    if (!item) return <div className="p-10 font-bold text-xl">모든 시험이 종료되었습니다.</div>;
-
-    return (
-        <div className="flex-1 w-full max-w-4xl mt-8 mb-8 flex flex-col relative text-center">
-            <audio ref={audioRef} />
-            <div className="liquid-panel w-full flex flex-col p-8">
-                <div className="flex w-full justify-between items-center mb-8 pb-4 border-b border-gray-200 dark:border-white/10">
-                    <h3 className="font-bold text-xl text-red-500 tracking-widest">TEST MODE</h3>
-                    <div className="font-mono text-3xl font-extrabold">{String(mins).padStart(2, '0')}:{String(secs).padStart(2, '0')}</div>
-                </div>
-
-                <div className="flex-1 flex flex-col items-center justify-center min-h-[300px] relative">
-                    <button
-                        onClick={() => speakText(item.Sentence1 || item.Word)}
-                        className="absolute top-0 left-0 p-3 rounded-2xl bg-liquid-blue/5 hover:bg-liquid-blue/10 transition-all group"
-                        title="AI 원어민 음성 듣기"
-                    >
-                        <Volume2 className="w-8 h-8 text-liquid-blue group-hover:scale-110 transition-transform" />
-                    </button>
-                    <h2 className="text-4xl font-semibold leading-relaxed px-12">
-                        {item.Sentence1 || item.Word}
-                    </h2>
-                </div>
-
-                <div className="mt-8">
-                    <input
-                        autoFocus
-                        className="w-full p-6 text-xl bg-white border border-gray-200 dark:bg-black dark:border-white/10 rounded-2xl outline-none focus:ring-2 focus:ring-liquid-blue shadow-lg"
-                        placeholder="Your answer..."
-                    />
-                </div>
-            </div>
-        </div>
-    );
-}
 
 export default App;
