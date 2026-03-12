@@ -13,15 +13,10 @@ function App() {
     return (
         <div className="w-full h-full relative overflow-hidden flex flex-col font-sans">
             {/* HEADER */}
-            <header className="h-16 w-full flex items-center justify-between px-6 bg-white/50 backdrop-blur-md border-b border-gray-200/50 dark:bg-black/50 dark:border-white/10 shrink-0 select-none z-50 fixed top-0 left-0">
+            <header className="h-16 w-full flex items-center justify-between px-8 bg-white shrink-0 fixed top-0 left-0 z-50 border-b border-gray-100">
                 <div className="flex items-center gap-3">
-                    {useStore.getState().logoSrc ? (
-                        <img src={useStore.getState().logoSrc!} alt="Logo" className="h-8 object-contain" />
-                    ) : (
-                        <div className="font-bold text-lg text-liquid-blue tracking-tighter">Willgrow Language</div>
-                    )}
-                    <h1 className="text-gray-900 dark:text-gray-100 font-semibold ml-2">
-                        8,9급 통번역 훈련
+                    <h1 className="text-gray-800 font-extrabold text-xl tracking-tight">
+                        주니어통번역사 9,8급
                     </h1>
                 </div>
 
@@ -29,7 +24,7 @@ function App() {
                     <div className="flex gap-4">
                         <button
                             onClick={() => setChapter(0)}
-                            className="text-sm font-medium px-4 py-2 rounded-full border border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors"
+                            className="neu-btn px-6 py-2 text-sm"
                         >
                             세팅 메뉴
                         </button>
@@ -41,7 +36,7 @@ function App() {
             <main className="flex-1 mt-16 overflow-y-auto">
                 {setupError ? (
                     <div className="w-full h-full flex flex-col items-center justify-center p-8">
-                        <div className="liquid-panel p-8 max-sm w-full text-center text-red-500">
+                        <div className="neu-panel p-10 max-sm w-full text-center text-red-500">
                             <h2 className="font-bold text-xl mb-4">초기화 오류</h2>
                             <p className="text-sm">{setupError}</p>
                         </div>
@@ -68,17 +63,17 @@ function SetupScreen() {
             exit={{ opacity: 0, scale: 0.95 }}
             className="w-full h-full flex flex-col items-center justify-center -mt-8"
         >
-            <div className="liquid-panel p-10 w-[500px] flex flex-col gap-8 shadow-2xl">
-                <div className="text-center space-y-2 mb-4">
-                    <h2 className="text-3xl font-bold tracking-tight">Set up Class</h2>
-                    <p className="text-sm text-gray-500">오늘 진행할 테마와 Day를 선택해주세요.</p>
+            <div className="neu-panel p-12 w-[520px] flex flex-col gap-10">
+                <div className="text-center space-y-3 mb-4">
+                    <h2 className="text-4xl font-extrabold tracking-tight text-gray-700">Set up Class</h2>
+                    <p className="text-sm font-medium text-gray-400">오늘 진행할 테마와 Day를 선택해주세요.</p>
                 </div>
 
-                <div className="space-y-4">
-                    <div className="flex flex-col gap-2">
-                        <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">테마 선택</label>
+                <div className="space-y-6">
+                    <div className="flex flex-col gap-3">
+                        <label className="text-sm font-bold text-gray-400 ml-2">테마 선택</label>
                         <select
-                            className="w-full p-4 rounded-xl bg-white/60 dark:bg-black/60 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-liquid-blue outline-none transition-all cursor-pointer"
+                            className="neu-input w-full cursor-pointer appearance-none"
                             value={selectedTheme || ''}
                             onChange={(e) => setTheme(e.target.value)}
                         >
@@ -92,10 +87,10 @@ function SetupScreen() {
                         </select>
                     </div>
 
-                    <div className="flex flex-col gap-2">
-                        <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Day 선택</label>
+                    <div className="flex flex-col gap-3">
+                        <label className="text-sm font-bold text-gray-400 ml-2">Day 선택</label>
                         <select
-                            className="w-full p-4 rounded-xl bg-white/60 dark:bg-black/60 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-liquid-blue outline-none transition-all cursor-pointer"
+                            className="neu-input w-full cursor-pointer appearance-none"
                             value={selectedSession || ''}
                             onChange={(e) => setSession(e.target.value)}
                         >
@@ -108,7 +103,7 @@ function SetupScreen() {
                 <button
                     disabled={!selectedTheme || !selectedSession}
                     onClick={startClass}
-                    className="w-full py-4 mt-6 bg-liquid-blue text-white font-bold rounded-2xl hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-500/20"
+                    className="neu-btn-blue w-full py-5 text-xl disabled:opacity-50"
                 >
                     수업 시작하기 (Start)
                 </button>
@@ -155,19 +150,19 @@ function LearningScreen() {
     return (
         <div className="w-full h-full flex flex-col items-center">
             {/* View Mode Toggle & Chapter Tabs */}
-            <div className="w-full max-w-4xl px-8 mt-6 flex flex-col gap-4">
+            <div className="w-full max-w-4xl px-8 mt-10 flex flex-col gap-8">
                 <div className="flex justify-end">
-                    <div className="bg-gray-200/50 dark:bg-white/5 p-1 rounded-xl flex gap-1 backdrop-blur-sm">
+                    <div className="shadow-neu-pressed p-2 rounded-2xl flex gap-1">
                         <button
                             onClick={() => setViewMode('study')}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${viewMode === 'study' ? 'bg-white dark:bg-black/60 shadow-sm text-liquid-blue' : 'text-gray-500 hover:text-gray-700'}`}
+                            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all ${viewMode === 'study' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}
                         >
                             <BookOpen className="w-4 h-4" />
                             학습 모드
                         </button>
                         <button
                             onClick={() => setViewMode('list')}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${viewMode === 'list' ? 'bg-white dark:bg-black/60 shadow-sm text-liquid-blue' : 'text-gray-500 hover:text-gray-700'}`}
+                            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all ${viewMode === 'list' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}
                         >
                             <List className="w-4 h-4" />
                             리스트 보기
@@ -175,18 +170,18 @@ function LearningScreen() {
                     </div>
                 </div>
 
-                <div className="flex rounded-full bg-gray-200/50 dark:bg-white/5 p-1 backdrop-blur-md">
+                <div className="flex shadow-neu-pressed p-2 rounded-[30px] gap-2">
                     {['1장: 어휘 (Flashcard)', '2장: 통역 (Interpretation)', '3장: 번역 (Translation)'].map((label, i) => (
                         <button
                             key={label}
                             onClick={() => {
                                 setChapter(i + 1);
                                 setIdx(0);
-                                setViewMode('study'); // 장 이동 시 기본은 학습모드로
+                                setViewMode('study');
                             }}
-                            className={`flex-1 text-sm font-semibold py-2.5 rounded-full transition-all ${currentChapter === i + 1
-                                ? 'bg-white text-liquid-blue shadow-sm dark:bg-black/80 dark:text-white'
-                                : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                            className={`flex-1 text-sm font-bold py-4 rounded-[25px] transition-all ${currentChapter === i + 1
+                                ? 'shadow-neu-button text-liquid-blue'
+                                : 'text-gray-400 hover:text-gray-600'
                                 }`}
                         >
                             {label}
@@ -233,9 +228,9 @@ function StarButton({ item }: { item: any }) {
                 e.stopPropagation();
                 toggleStar(item.id);
             }}
-            className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+            className="p-3 neu-btn w-12 h-12 absolute top-8 right-8 z-10"
         >
-            <Star className={`w-6 h-6 ${item.isStarred ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300 dark:text-gray-600'}`} />
+            <Star className={`w-6 h-6 ${item.isStarred ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} />
         </button>
     );
 }
@@ -248,19 +243,18 @@ function GlobalListView({ items, currentChapter }: { items: any[], currentChapte
             exit={{ opacity: 0, y: -20 }}
             className="w-full max-w-4xl px-8 py-8 h-full flex flex-col overflow-hidden"
         >
-            <div className="liquid-panel w-full flex-1 flex flex-col overflow-hidden border border-white/40 dark:border-white/5 shadow-2xl">
-                <div className="p-6 border-b border-gray-100 dark:border-white/5 bg-white/50 dark:bg-black/20 flex justify-between items-center">
-                    <h3 className="font-bold text-lg flex items-center gap-2">
-                        <List className="w-5 h-5 text-liquid-blue" />
+            <div className="neu-panel w-full flex-1 flex flex-col overflow-hidden shadow-neu-flat">
+                <div className="p-8 border-b border-gray-200/50 flex justify-between items-center bg-white/10">
+                    <h3 className="font-extrabold text-xl flex items-center gap-3 text-gray-700">
+                        <List className="w-6 h-6 text-liquid-blue" />
                         {currentChapter}장 전체 목록 ({items.length}개)
                     </h3>
-                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Click an item to listen</p>
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Click to listen</p>
                 </div>
 
-                <div className="flex-1 overflow-y-auto custom-scrollbar p-2">
-                    <div className="flex flex-col gap-2">
+                <div className="flex-1 overflow-y-auto custom-scrollbar p-6">
+                    <div className="flex flex-col gap-4">
                         {items.map((item, i) => {
-                            // 2장(통역)은 한글 뜻을 메인으로, 3장(번역)은 영어 문장을 메인으로
                             const mainText = currentChapter === 2
                                 ? (item.Translation1 || item.Meaning)
                                 : (item.Word || item.Sentence1);
@@ -269,33 +263,31 @@ function GlobalListView({ items, currentChapter }: { items: any[], currentChapte
                                 ? (item.Word || item.Sentence1)
                                 : (item.Meaning || item.Translation1);
 
-                            // 오디오 재생 텍스트 결정
                             const audioText = currentChapter === 2
-                                ? (item.Word || item.Sentence1) // 2장: 영어 문장/단어 재생
-                                : (item.Word || item.Sentence1); // 1, 3, 4장: 영어 문장/단어 재생
+                                ? (item.Word || item.Sentence1)
+                                : (item.Word || item.Sentence1);
 
                             return (
                                 <button
                                     key={item.id}
                                     onClick={() => speakText(audioText)}
-                                    className="group w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-liquid-blue/5 dark:hover:bg-white/5 transition-all text-left border border-transparent hover:border-liquid-blue/10 active:scale-[0.99]"
+                                    className="group w-full flex items-center gap-6 p-6 rounded-[25px] hover:shadow-neu-pressed transition-all text-left bg-neu-bg active:scale-[0.99]"
                                 >
-                                    <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center text-xs font-bold text-gray-400 group-hover:bg-liquid-blue/10 group-hover:text-liquid-blue transition-colors shrink-0">
+                                    <div className="w-10 h-10 rounded-full shadow-neu-button flex items-center justify-center text-sm font-bold text-gray-400 group-hover:text-liquid-blue transition-colors shrink-0">
                                         {i + 1}
                                     </div>
 
                                     <div className="flex-1 min-w-0">
-                                        <h4 className="font-bold text-lg group-hover:text-liquid-blue transition-colors truncate">
+                                        <h4 className="font-bold text-xl text-gray-700 group-hover:text-liquid-blue transition-colors truncate">
                                             {mainText}
                                         </h4>
-                                        <p className="text-sm text-gray-500 truncate opacity-80 mt-0.5">
+                                        <p className="text-sm text-gray-400 truncate font-medium mt-1">
                                             {subText}
                                         </p>
                                     </div>
 
-                                    <div className="flex items-center gap-2 shrink-0">
-                                        <StarButton item={item} />
-                                        <div className="w-10 h-10 rounded-xl bg-liquid-blue/5 dark:bg-white/5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all scale-90 group-hover:scale-100">
+                                    <div className="flex items-center gap-4 shrink-0">
+                                        <div className="p-3 neu-btn rounded-xl opacity-0 group-hover:opacity-100 transition-all scale-90 group-hover:scale-100">
                                             <Volume2 className="w-5 h-5 text-liquid-blue" />
                                         </div>
                                     </div>
@@ -350,105 +342,78 @@ function Ch1Flashcard({ item, onNext, onPrev, progress }: any) {
     const answerText = viewMode === 'EN' ? item.Meaning : item.Word;
 
     return (
-        <div className="flex-1 w-full max-w-4xl mt-8 mb-8 p-4 flex flex-col items-center justify-center relative gap-6">
-            <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-sm font-bold text-gray-400">{progress}</span>
+        <div className="flex-1 w-full max-w-4xl mt-12 mb-8 flex flex-col items-center gap-8 relative">
+            <span className="absolute -top-10 left-1/2 -translate-x-1/2 text-sm font-bold text-gray-400">{progress}</span>
 
-            {/* English / Korean 섹션 구분 스위치 */}
+            {/* Mode Toggle */}
             <div className="flex justify-center">
-                <div className="bg-gray-100 dark:bg-white/5 p-1.5 rounded-2xl flex gap-1 shadow-inner">
+                <div className="shadow-neu-pressed p-2 rounded-2xl flex gap-1">
                     <button
                         onClick={() => setViewMode('EN')}
-                        className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 ${viewMode === 'EN' ? 'bg-white dark:bg-white/10 shadow-md text-liquid-blue translate-y-[-1px]' : 'text-gray-400 hover:text-gray-600'}`}
+                        className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${viewMode === 'EN' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}
                     >
                         English
                     </button>
                     <button
                         onClick={() => setViewMode('KR')}
-                        className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 ${viewMode === 'KR' ? 'bg-white dark:bg-white/10 shadow-md text-liquid-blue translate-y-[-1px]' : 'text-gray-400 hover:text-gray-600'}`}
+                        className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${viewMode === 'KR' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}
                     >
                         Korean
                     </button>
                 </div>
             </div>
 
-            <div className="liquid-panel w-full min-h-[550px] flex flex-col items-center justify-start py-16 px-8 relative shadow-[0_30px_60px_-12px_rgba(0,0,0,0.12)] transition-all border border-white/40 dark:border-white/5 overflow-visible">
+            <div className="neu-panel w-full flex-1 flex flex-col p-12 relative items-center justify-center min-h-[400px]">
                 <StarButton item={item} />
                 <button
-                    onClick={() => speakText(item?.Word)}
-                    className="absolute top-8 left-8 p-3 rounded-2xl bg-liquid-blue/5 hover:bg-liquid-blue/10 transition-all group shadow-sm active:scale-95 z-10"
+                    onClick={() => speakText(item.Word)}
+                    className="absolute top-8 left-8 neu-btn p-3 w-14 h-14"
                     title="다시 듣기 (스페이스바 or ↓)"
                 >
-                    <Volume2 className="w-7 h-7 text-liquid-blue group-hover:scale-110 transition-transform" />
+                    <Volume2 className="w-7 h-7 text-liquid-blue" />
                 </button>
 
-                <div className="text-center space-y-2 mt-8">
-                    <p className="text-sm font-bold text-liquid-blue uppercase tracking-[0.2em] opacity-60 mb-4">
+                <div className="text-center space-y-4">
+                    <p className="text-sm font-bold text-gray-400 uppercase tracking-widest opacity-60">
                         {viewMode === 'EN' ? 'Vocabulary' : 'Definition'}
                     </p>
-                    <h2 className={`${viewMode === 'EN' ? 'text-7xl' : 'text-6xl'} font-black tracking-tight drop-shadow-sm break-keep text-center px-4 leading-tight`}>
+                    <h2 className={`${viewMode === 'EN' ? 'text-7xl' : 'text-6xl'} font-extrabold tracking-tight text-gray-700 leading-tight`}>
                         {questionText}
                     </h2>
-                    <p className="text-sm font-medium text-gray-400 mt-6 bg-gray-50 dark:bg-white/5 px-4 py-1.5 rounded-full inline-block">{item.Theme}</p>
-                </div>
-
-                <div className="mt-12 min-h-[160px] flex items-center justify-center w-full pb-20">
-                    <AnimatePresence mode="wait">
-                        {revealed && (
-                            <motion.div
-                                key={`${item.Word}-${viewMode}`}
-                                initial={{ opacity: 0, scale: 0.95, y: 10 }}
-                                animate={{ opacity: 1, scale: 1, y: 0 }}
-                                exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                                transition={{ type: 'spring', damping: 20, stiffness: 100 }}
-                                className="text-center px-8 py-8 bg-liquid-blue/5 rounded-3xl border border-liquid-blue/10 w-full max-w-2xl"
-                            >
-                                <div className="flex flex-col items-center gap-4">
-                                    <p className={`${viewMode === 'EN' ? 'text-4xl' : 'text-5xl'} font-bold text-liquid-blue leading-tight`}>
-                                        {answerText}
-                                    </p>
-                                    <button
-                                        onClick={() => speakText(answerText)}
-                                        className="p-2 rounded-full hover:bg-liquid-blue/10 transition-colors"
-                                        title="정답 음성 듣기"
-                                    >
-                                        <Volume2 className="w-5 h-5 text-liquid-blue/60 hover:text-liquid-blue" />
-                                    </button>
-                                </div>
-                                {item.Sentence1 && (
-                                    <div className="mt-6 flex flex-col items-center gap-2">
-                                        <div className="w-full h-px bg-liquid-blue/10 mb-6" />
-                                        <div className="flex items-start justify-center gap-4 px-4 text-center">
-                                            <p className="text-xl text-gray-500 font-medium leading-relaxed italic opacity-80 decoration-liquid-blue/20">
-                                                "{item.Sentence1}"
-                                            </p>
-                                            <button
-                                                onClick={() => speakText(item.Sentence1)}
-                                                className="flex-shrink-0 p-2 rounded-xl bg-gray-50 dark:bg-white/5 hover:bg-liquid-blue/5 transition-all active:scale-95"
-                                                title="예문 음성 듣기"
-                                            >
-                                                <Volume2 className="w-5 h-5 text-liquid-blue" />
-                                            </button>
-                                        </div>
-                                    </div>
-                                )}
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </div>
-
-                <div className="absolute bottom-6 flex items-center gap-3 text-xs font-bold text-gray-400/80 bg-white/60 dark:bg-black/40 px-5 py-2.5 rounded-2xl backdrop-blur-md border border-white/20 shadow-sm z-20">
-                    <div className="flex gap-1.5">
-                        <span className="bg-gray-200 dark:bg-white/10 px-1.5 py-0.5 rounded shadow-sm">Space</span>
-                        <span className="bg-gray-200 dark:bg-white/10 px-1.5 py-0.5 rounded shadow-sm">↓</span>
-                        <span>Listen</span>
-                    </div>
-                    <div className="w-px h-3 bg-gray-300 dark:bg-white/20" />
-                    <div className="flex gap-1.5">
-                        <span className="bg-gray-200 dark:bg-white/10 px-1.5 py-0.5 rounded shadow-sm">Enter</span>
-                        <span>Show/Next</span>
-                    </div>
+                    <p className="text-xs font-bold text-gray-300 mt-4 tracking-tighter uppercase">{item.Theme}</p>
                 </div>
             </div>
+
+            <div className="flex gap-6 w-full mt-4">
+                <button
+                    onClick={handleAction}
+                    className="neu-btn flex-1 py-6 text-xl"
+                >
+                    {revealed ? '뜻 숨기기' : '뜻 확인하기 (Enter)'}
+                </button>
+                <button
+                    onClick={onNext}
+                    className="neu-btn-blue w-24 py-6 text-lg"
+                >
+                    Next
+                </button>
+            </div>
+
+            <AnimatePresence>
+                {revealed && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
+                        className="w-full neu-panel p-10 mt-6 shadow-neu-pressed"
+                    >
+                        <div className="text-center space-y-4">
+                            <span className="font-bold text-liquid-blue uppercase tracking-widest text-xs">Meaning</span>
+                            <p className={`${viewMode === 'EN' ? 'text-4xl' : 'text-5xl'} font-bold text-gray-700 leading-tight`}>
+                                {answerText}
+                            </p>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }
@@ -513,48 +478,49 @@ function Ch2Interpretation({ item, onNext, onPrev, progress, vocabulary }: any) 
     };
 
     return (
-        <div className="flex-1 w-full max-w-4xl mt-8 mb-8 flex flex-col relative text-center">
-            <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-sm font-bold text-gray-400">{progress}</span>
+        <div className="flex-1 w-full max-w-4xl mt-12 mb-8 flex flex-col relative text-center gap-6">
+            <span className="absolute -top-10 left-1/2 -translate-x-1/2 text-sm font-bold text-gray-400">{progress}</span>
             <audio ref={audioRef} />
 
-            <div className="liquid-panel w-full flex-1 flex flex-col p-8 relative">
+            <div className="neu-panel w-full flex-1 flex flex-col p-12 relative items-center justify-center min-h-[350px]">
                 <StarButton item={item} />
 
                 {/* Audio Controller Visualization */}
-                <div className="flex-1 flex flex-col items-center justify-center gap-6">
+                <div className="flex flex-col items-center gap-8">
                     <button
                         onClick={() => speakText(item.Sentence1 || item.Word)}
-                        className="w-24 h-24 rounded-full bg-liquid-blue/10 flex items-center justify-center pulse-animation hover:bg-liquid-blue/20 transition-colors"
+                        className="w-28 h-28 rounded-full neu-btn pulse-animation"
                     >
                         <Volume2 className="w-12 h-12 text-liquid-blue" />
                     </button>
-                    <p className="text-gray-500 font-medium">Listen and Interpret</p>
+                    <p className="text-gray-400 font-bold uppercase tracking-widest text-sm">Listen and Interpret</p>
                 </div>
+            </div>
 
-                {/* Input area */}
-                <div className="w-full mt-auto space-y-4">
-                    <input
-                        autoFocus
-                        className="w-full p-6 text-xl bg-white/50 dark:bg-black/40 border border-gray-200 dark:border-white/10 rounded-2xl outline-none focus:ring-2 focus:ring-liquid-blue shadow-inner"
-                        placeholder="Type your interpretation here..."
-                        value={textVal}
-                        onChange={e => setTextVal(e.target.value)}
-                    />
-                </div>
+            {/* Input area */}
+            <div className="w-full flex gap-4">
+                <input
+                    autoFocus
+                    className="neu-input flex-1 p-8 text-2xl"
+                    placeholder="Type your interpretation here..."
+                    value={textVal}
+                    onChange={e => setTextVal(e.target.value)}
+                />
+                <button onClick={onNext} className="neu-btn-blue w-24 py-6 text-lg">Next</button>
             </div>
 
             <AnimatePresence>
                 {revealed && (
                     <motion.div
-                        initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }}
-                        className="w-full liquid-panel p-8 mt-4"
+                        initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
+                        className="w-full neu-panel p-10 text-left shadow-neu-pressed bg-opacity-50"
                     >
-                        <div className="text-left space-y-4">
+                        <div className="space-y-4">
                             <span className="font-bold text-liquid-blue uppercase tracking-widest text-xs">Answer</span>
-                            <p className="text-2xl font-medium leading-relaxed">
+                            <p className="text-3xl font-extrabold text-gray-700 leading-relaxed">
                                 {renderHighlighted(item.Sentence1 || item.Word)}
                             </p>
-                            {item.Translation1 && <p className="text-lg text-gray-500">{item.Translation1}</p>}
+                            {item.Translation1 && <p className="text-xl text-gray-400 font-medium">{item.Translation1}</p>}
                         </div>
                     </motion.div>
                 )}
@@ -636,60 +602,63 @@ function Ch3Translation({ item, onNext, onPrev, progress, vocabulary }: any) {
     const answerText = viewMode === 'EN' ? (item.Translation1 || item.Meaning) : (item.Sentence1 || item.Word);
 
     return (
-        <div className="flex-1 w-full max-w-4xl mt-8 mb-8 flex flex-col relative text-center gap-4">
+        <div className="flex-1 w-full max-w-4xl mt-12 mb-8 flex flex-col relative text-center gap-8">
             <span className="absolute -top-10 left-1/2 -translate-x-1/2 text-sm font-bold text-gray-400">{progress}</span>
             <audio ref={audioRef} />
 
             {/* 모드 선택 스위치 */}
-            <div className="flex justify-center mb-2">
-                <div className="bg-gray-100 dark:bg-white/5 p-1 rounded-xl flex gap-1">
+            <div className="flex justify-center">
+                <div className="shadow-neu-pressed p-2 rounded-2xl flex gap-1">
                     <button
                         onClick={() => setViewMode('EN')}
-                        className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${viewMode === 'EN' ? 'bg-white dark:bg-white/10 shadow-sm text-liquid-blue' : 'text-gray-400'}`}
+                        className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${viewMode === 'EN' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}
                     >
                         영어 보여주기
                     </button>
                     <button
                         onClick={() => setViewMode('KR')}
-                        className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${viewMode === 'KR' ? 'bg-white dark:bg-white/10 shadow-sm text-liquid-blue' : 'text-gray-400'}`}
+                        className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${viewMode === 'KR' ? 'shadow-neu-button text-liquid-blue' : 'text-gray-400 hover:text-gray-600'}`}
                     >
                         한글 보여주기
                     </button>
                 </div>
             </div>
 
-            <div className="liquid-panel w-full flex-1 flex flex-col p-8 relative items-center justify-center min-h-[250px]">
+            <div className="neu-panel w-full flex-1 flex flex-col p-12 relative items-center justify-center min-h-[300px]">
                 <StarButton item={item} />
                 <button
                     onClick={() => speakText(item.Sentence1 || item.Word)}
-                    className="absolute top-6 left-6 p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+                    className="absolute top-8 left-8 neu-btn p-3 w-14 h-14"
                     title="영어 발음 듣기"
                 >
-                    <Volume2 className="w-6 h-6 text-liquid-blue" />
+                    <Volume2 className="w-7 h-7 text-liquid-blue" />
                 </button>
-                <h2 className="text-4xl font-semibold leading-relaxed">
+                <h2 className="text-4xl font-extrabold text-gray-700 leading-relaxed px-10">
                     {renderContent(questionText, viewMode === 'EN')}
                 </h2>
             </div>
 
-            <div className="w-full">
+            <div className="w-full flex gap-4">
                 <input
                     autoFocus
-                    className="w-full p-6 text-xl bg-white border border-gray-200 dark:bg-black dark:border-white/10 rounded-2xl outline-none focus:ring-2 focus:ring-liquid-blue shadow-lg"
+                    className="neu-input flex-1 p-8 text-2xl"
                     placeholder={viewMode === 'EN' ? "한글로 번역하세요..." : "영어로 번역하세요..."}
                     value={textVal}
                     onChange={e => setTextVal(e.target.value)}
                 />
+                <button onClick={onNext} className="neu-btn-blue w-24 py-6 text-lg">Next</button>
             </div>
 
             <AnimatePresence>
                 {revealed && (
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                        className="w-full liquid-panel p-8 text-left"
+                        initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
+                        className="w-full neu-panel p-10 text-left shadow-neu-pressed bg-opacity-50"
                     >
-                        <span className="font-bold text-liquid-blue uppercase tracking-widest text-xs">Answer</span>
-                        <p className="text-3xl mt-2 font-bold leading-relaxed">{answerText}</p>
+                        <div className="space-y-4">
+                            <span className="font-bold text-liquid-blue uppercase tracking-widest text-xs">Answer</span>
+                            <p className="text-3xl font-extrabold text-gray-700 leading-relaxed">{answerText}</p>
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>
