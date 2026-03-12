@@ -1,7 +1,7 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useStore, speakText, stopSpeech } from './store';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star, Volume2, List, BookOpen } from 'lucide-react';
+import { Star, Volume2 } from 'lucide-react';
 
 function App() {
     const { initialize, setupError, currentChapter, setChapter } = useStore();
@@ -148,8 +148,8 @@ function LearningScreen() {
                             className="w-full h-full flex flex-col min-h-0"
                         >
                             {currentChapter === 1 && <Ch1Flashcard item={currentItem} onNext={goNext} onPrev={goPrev} progress={`${idx + 1}/${data.length}`} />}
-                            {currentChapter === 2 && <Ch2Interpretation item={currentItem} onNext={goNext} onPrev={goPrev} progress={`${idx + 1}/${data.length}`} vocabulary={data.map(d => d.Word).filter(Boolean)} />}
-                            {currentChapter === 3 && <Ch3Translation item={currentItem} onNext={goNext} onPrev={goPrev} progress={`${idx + 1}/${data.length}`} vocabulary={data} />}
+                            {currentChapter === 2 && <Ch2Interpretation item={currentItem} onNext={goNext} progress={`${idx + 1}/${data.length}`} />}
+                            {currentChapter === 3 && <Ch3Translation item={currentItem} onNext={goNext} progress={`${idx + 1}/${data.length}`} />}
                         </motion.div>
                     )}
                 </AnimatePresence>
@@ -255,7 +255,7 @@ function Ch1Flashcard({ item, onNext, onPrev, progress }: any) {
 }
 
 // CH2: 통역
-function Ch2Interpretation({ item, onNext, onPrev, progress, vocabulary }: any) {
+function Ch2Interpretation({ item, onNext, progress }: any) {
     const [revealed, setRevealed] = useState(false);
     const [textVal, setTextVal] = useState('');
     useEffect(() => { setRevealed(false); setTextVal(''); return () => stopSpeech(); }, [item]);
@@ -302,7 +302,7 @@ function Ch2Interpretation({ item, onNext, onPrev, progress, vocabulary }: any) 
 }
 
 // CH3: 번역
-function Ch3Translation({ item, onNext, onPrev, progress, vocabulary }: any) {
+function Ch3Translation({ item, onNext, progress }: any) {
     const [revealed, setRevealed] = useState(false);
     const [textVal, setTextVal] = useState('');
     const [viewMode, setViewMode] = useState<'EN' | 'KR'>('EN');
