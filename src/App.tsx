@@ -148,7 +148,7 @@ function LearningScreen() {
     };
 
     return (
-        <div className="w-full h-full flex flex-col items-center">
+        <div className="w-full flex-1 flex flex-col items-center">
             {/* View Mode Toggle & Chapter Tabs */}
             <div className="w-full max-w-4xl px-8 mt-10 flex flex-col gap-8">
                 <div className="flex justify-end">
@@ -190,7 +190,7 @@ function LearningScreen() {
                 </div>
             </div>
 
-            <main className="flex-1 w-full flex flex-col items-center overflow-hidden">
+            <main className="flex-1 w-full flex flex-col items-center">
                 <AnimatePresence mode="wait">
                     {viewMode === 'list' ? (
                         <GlobalListView key="list" items={data} currentChapter={currentChapter} />
@@ -200,7 +200,7 @@ function LearningScreen() {
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -20 }}
-                            className="w-full h-full flex flex-col items-center"
+                            className="w-full flex flex-col items-center"
                         >
                             {currentChapter === 1 && <Ch1Flashcard item={currentItem} path={classDataPath!} onNext={goNext} onPrev={goPrev} progress={`${idx + 1}/${data.length}`} />}
                             {currentChapter === 2 && <Ch2Interpretation item={currentItem} path={classDataPath!} onNext={goNext} onPrev={goPrev} progress={`${idx + 1}/${data.length}`} vocabulary={data.map(d => d.Word).filter(Boolean)} />}
@@ -313,7 +313,8 @@ function Ch1Flashcard({ item, onNext, onPrev, progress }: any) {
     }, [item, viewMode]);
 
     const handleAction = () => {
-        setRevealed(!revealed);
+        if (!revealed) setRevealed(true);
+        else onNext();
     };
 
     // 키보드 단축키: 스페이스·↓ = 다시 읽기, 엔터 = 정답공개/다음, → = 다음(Skip), ← = 이전
@@ -389,7 +390,7 @@ function Ch1Flashcard({ item, onNext, onPrev, progress }: any) {
                     onClick={handleAction}
                     className="neu-btn flex-1 py-6 text-xl"
                 >
-                    {revealed ? '뜻 숨기기' : '뜻 확인하기 (Enter)'}
+                    {revealed ? '다음으로 (Enter)' : '뜻 확인하기 (Enter)'}
                 </button>
                 <button
                     onClick={onNext}
@@ -431,7 +432,8 @@ function Ch2Interpretation({ item, onNext, onPrev, progress, vocabulary }: any) 
     }, [item]);
 
     const handleAction = () => {
-        setRevealed(!revealed);
+        if (!revealed) setRevealed(true);
+        else onNext();
     };
 
     // 키보드 단축키
@@ -543,7 +545,8 @@ function Ch3Translation({ item, onNext, onPrev, progress, vocabulary }: any) {
     }, [item, viewMode]);
 
     const handleAction = () => {
-        setRevealed(!revealed);
+        if (!revealed) setRevealed(true);
+        else onNext();
     };
 
     // 3장 번역 단축키 처리
