@@ -12,7 +12,6 @@ function App() {
 
     return (
         <div className="w-full h-full flex flex-col font-sans overflow-hidden bg-neu-bg">
-            {/* Header - Fixed Height */}
             <header className="h-[6vh] min-h-[45px] w-full flex items-center justify-between px-6 bg-white shrink-0 border-b border-gray-100 z-50">
                 <h1 className="text-gray-800 font-black text-[clamp(0.9rem,2.5vh,1.2rem)] tracking-tight">
                     통번역 프로그램
@@ -117,7 +116,6 @@ function LearningScreen() {
 
     return (
         <div className="w-full h-full flex flex-col items-center overflow-hidden">
-            {/* Nav - Fixed Height */}
             <div className="w-full max-w-3xl px-6 pt-2 flex flex-col gap-2 shrink-0">
                 <div className="flex justify-end h-[3vh]">
                     <div className="shadow-neu-pressed p-0.5 rounded-xl flex">
@@ -138,7 +136,6 @@ function LearningScreen() {
                 </div>
             </div>
 
-            {/* Content area - Strictly fits in remaining 100vh */}
             <div className="flex-1 w-full flex flex-col items-center justify-center p-[2vh] min-h-0 max-w-4xl mx-auto overflow-hidden">
                 <AnimatePresence mode="wait">
                     {viewMode === 'list' ? (
@@ -149,9 +146,9 @@ function LearningScreen() {
                             initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }}
                             className="w-full h-full flex flex-col min-h-0 overflow-hidden"
                         >
-                            {currentChapter === 1 && <Ch1Flashcard item={currentItem} onNext={goNext} onPrev={goPrev} progress={`${idx + 1}/${data.length}`} />}
-                            {currentChapter === 2 && <Ch2Interpretation item={currentItem} onNext={goNext} progress={`${idx + 1}/${data.length}`} />}
-                            {currentChapter === 3 && <Ch3Translation item={currentItem} onNext={goNext} progress={`${idx + 1}/${data.length}`} />}
+                            {currentChapter === 1 && <Ch1Flashcard key={`ch1-${idx}`} item={currentItem} onNext={goNext} onPrev={goPrev} progress={`${idx + 1}/${data.length}`} />}
+                            {currentChapter === 2 && <Ch2Interpretation key={`ch2-${idx}`} item={currentItem} onNext={goNext} progress={`${idx + 1}/${data.length}`} />}
+                            {currentChapter === 3 && <Ch3Translation key={`ch3-${idx}`} item={currentItem} onNext={goNext} progress={`${idx + 1}/${data.length}`} />}
                         </motion.div>
                     )}
                 </AnimatePresence>
@@ -197,18 +194,28 @@ function GlobalListView({ items, currentChapter }: { items: any[], currentChapte
 // CH1: 어휘
 function Ch1Flashcard({ item, onNext, onPrev, progress }: any) {
     const [viewMode, setViewMode] = useState<'EN' | 'KR'>('EN');
+    const [revealed, setRevealed] = useState(false);
 
-    useEffect(() => { return () => stopSpeech(); }, [item, viewMode]);
+    useEffect(() => { 
+        setRevealed(false);
+        return () => stopSpeech(); 
+    }, [item, viewMode]);
+
+    const handleAction = () => {
+        if (!revealed) setRevealed(true);
+        else onNext();
+    };
 
     useEffect(() => {
         const handleKey = (e: KeyboardEvent) => {
             if (document.activeElement?.tagName === 'INPUT') return;
-            if (e.code === 'Enter' || e.code === 'ArrowRight') { e.preventDefault(); onNext(); }
+            if (e.code === 'Enter') { e.preventDefault(); handleAction(); }
             if (e.code === 'Space' || e.code === 'ArrowDown') { e.preventDefault(); speakText(item.Word); }
+            if (e.code === 'ArrowRight') handleAction(); 
             if (e.code === 'ArrowLeft') onPrev();
         };
         window.addEventListener('keydown', handleKey); return () => window.removeEventListener('keydown', handleKey);
-    }, [item, onNext, onPrev]);
+    }, [item, onNext, onPrev, revealed]);
 
     return (
         <div className="flex-1 w-full h-full flex flex-col gap-[1.5vh] min-h-0 overflow-hidden">
@@ -226,24 +233,28 @@ function Ch1Flashcard({ item, onNext, onPrev, progress }: any) {
                     <Volume2 className="w-[2vh] h-[2vh] text-liquid-blue" />
                 </button>
                 
-                {/* Scrollable Inner Content Area */}
                 <div className="w-full h-full flex flex-col items-center justify-center overflow-y-auto custom-scrollbar pt-4">
                     <div className="w-full text-center mb-6 shrink-0">
                         <h2 className="text-[clamp(1.5rem,6vh,5rem)] font-black text-gray-700 leading-tight break-words px-4">
                             {viewMode === 'EN' ? item.Word : item.Meaning}
                         </h2>
                     </div>
-                    <div className="w-full border-t border-gray-100/50 pt-6 text-center shrink-0">
-                        <p className="text-[clamp(1.2rem,4.5vh,3.5rem)] font-bold text-gray-400 leading-tight break-words px-4">
-                            {viewMode === 'EN' ? item.Meaning : item.Word}
-                        </p>
-                    </div>
+                    {revealed && (
+                        <motion.div 
+                            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                            className="w-full border-t border-gray-100/50 pt-6 text-center shrink-0"
+                        >
+                            <p className="text-[clamp(1.2rem,4.5vh,3.5rem)] font-bold text-liquid-blue leading-tight break-words px-4">
+                                {viewMode === 'EN' ? item.Meaning : item.Word}
+                            </p>
+                        </motion.div>
+                    )}
                 </div>
             </div>
 
             <div className="flex justify-center shrink-0 h-[6vh] mt-1">
-                <button onClick={onNext} className="neu-btn-blue px-10 text-[1.5vh] font-black rounded-2xl">
-                    다음 (Next)
+                <button onClick={handleAction} className="neu-btn-blue px-10 text-[1.5vh] font-black rounded-2xl">
+                    {revealed ? '다음 (Next)' : '해석 확인 (Enter)'}
                 </button>
             </div>
         </div>
@@ -253,16 +264,27 @@ function Ch1Flashcard({ item, onNext, onPrev, progress }: any) {
 // CH2: 통역
 function Ch2Interpretation({ item, onNext, progress }: any) {
     const [textVal, setTextVal] = useState('');
-    useEffect(() => { setTextVal(''); return () => stopSpeech(); }, [item]);
+    const [revealed, setRevealed] = useState(false);
+
+    useEffect(() => { 
+        setTextVal(''); 
+        setRevealed(false);
+        return () => stopSpeech(); 
+    }, [item]);
+
+    const handleAction = () => {
+        if (!revealed) setRevealed(true);
+        else onNext();
+    };
 
     useEffect(() => {
         const handleKey = (e: KeyboardEvent) => {
-            if (document.activeElement?.tagName === 'INPUT') { if (e.code === 'Enter') onNext(); return; }
-            if (e.code === 'Enter') onNext();
+            if (document.activeElement?.tagName === 'INPUT') { if (e.code === 'Enter') handleAction(); return; }
+            if (e.code === 'Enter') handleAction();
             if (e.code === 'Space' || e.code === 'ArrowDown') { e.preventDefault(); speakText(item.Sentence1 || item.Word); }
         };
         window.addEventListener('keydown', handleKey); return () => window.removeEventListener('keydown', handleKey);
-    }, [item, onNext]);
+    }, [item, onNext, revealed]);
 
     return (
         <div className="flex-1 w-full h-full flex flex-col gap-[1.5vh] min-h-0 overflow-hidden">
@@ -274,17 +296,23 @@ function Ch2Interpretation({ item, onNext, progress }: any) {
                         <button onClick={() => speakText(item.Sentence1 || item.Word)} className="w-[10vh] h-[10vh] rounded-full neu-btn mb-3">
                             <Volume2 className="w-[5vh] h-[5vh] text-liquid-blue" />
                         </button>
+                        <p className="text-[1.3vh] font-bold text-gray-400 uppercase">Listen & Speak</p>
                     </div>
-                    <div className="w-full border-t border-gray-100/50 pt-6 text-center shrink-0">
-                        <p className="text-[clamp(1.1rem,4.2vh,2.5rem)] font-black text-gray-700 leading-tight px-4">
-                            {item.Sentence1 || item.Word}
-                        </p>
-                        <p className="text-[1.7vh] text-gray-400 mt-2 font-medium px-4">{item.Translation1}</p>
-                    </div>
+                    {revealed && (
+                        <motion.div 
+                            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                            className="w-full border-t border-gray-100/50 pt-6 text-center shrink-0"
+                        >
+                            <p className="text-[clamp(1.1rem,4.2vh,2.5rem)] font-black text-liquid-blue leading-tight px-4">
+                                {item.Sentence1 || item.Word}
+                            </p>
+                            <p className="text-[1.7vh] text-gray-400 mt-2 font-medium px-4">{item.Translation1}</p>
+                        </motion.div>
+                    )}
                 </div>
             </div>
             <div className="shrink-0 flex justify-center h-[7vh] mt-1">
-                <input autoFocus className="neu-input w-full p-3 text-[1.8vh] text-center" placeholder="타이핑 후 Enter를 누르세요" value={textVal} onChange={e => setTextVal(e.target.value)} />
+                <input autoFocus className="neu-input w-full p-3 text-[1.8vh] text-center" placeholder="듣고 해석하세요... (Enter로 확인)" value={textVal} onChange={e => setTextVal(e.target.value)} />
             </div>
         </div>
     );
@@ -294,15 +322,26 @@ function Ch2Interpretation({ item, onNext, progress }: any) {
 function Ch3Translation({ item, onNext, progress }: any) {
     const [textVal, setTextVal] = useState('');
     const [viewMode, setViewMode] = useState<'EN' | 'KR'>('EN');
+    const [revealed, setRevealed] = useState(false);
 
-    useEffect(() => { setTextVal(''); return () => stopSpeech(); }, [item, viewMode]);
+    useEffect(() => { 
+        setTextVal(''); 
+        setRevealed(false);
+        return () => stopSpeech(); 
+    }, [item, viewMode]);
+
+    const handleAction = () => {
+        if (!revealed) setRevealed(true);
+        else onNext();
+    };
 
     useEffect(() => {
         const handleKey = (e: KeyboardEvent) => {
-            if (document.activeElement?.tagName === 'INPUT') { if (e.code === 'Enter') onNext(); return; }
+            if (document.activeElement?.tagName === 'INPUT') { if (e.code === 'Enter') handleAction(); return; }
+            if (e.code === 'Enter') handleAction();
         };
         window.addEventListener('keydown', handleKey); return () => window.removeEventListener('keydown', handleKey);
-    }, [item, onNext]);
+    }, [item, onNext, revealed]);
 
     return (
         <div className="flex-1 w-full h-full flex flex-col gap-[1.5vh] min-h-0 overflow-hidden">
@@ -324,11 +363,16 @@ function Ch3Translation({ item, onNext, progress }: any) {
                             {viewMode === 'EN' ? (item.Sentence1 || item.Word) : (item.Translation1 || item.Meaning)}
                         </h2>
                     </div>
-                    <div className="w-full border-t border-gray-100/50 pt-6 text-center shrink-0">
-                        <p className="text-[clamp(1rem,4vh,2.5rem)] font-black text-gray-400 leading-tight px-4">
-                            {viewMode === 'EN' ? (item.Translation1 || item.Meaning) : (item.Sentence1 || item.Word)}
-                        </p>
-                    </div>
+                    {revealed && (
+                        <motion.div 
+                            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                            className="w-full border-t border-gray-100/50 pt-6 text-center shrink-0"
+                        >
+                            <p className="text-[clamp(1rem,4vh,2.5rem)] font-black text-liquid-blue leading-tight px-4">
+                                {viewMode === 'EN' ? (item.Translation1 || item.Meaning) : (item.Sentence1 || item.Word)}
+                            </p>
+                        </motion.div>
+                    )}
                 </div>
             </div>
             <div className="shrink-0 flex justify-center h-[7vh] mt-1">
