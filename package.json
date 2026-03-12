@@ -10,13 +10,16 @@
     "build": "tsc && vite build",
     "build:electron": "tsc && vite build && electron-builder -mw",
     "web:dev": "vite",
-    "web:build": "tsc && vite build"
+    "web:build": "tsc && vite build",
+    "deploy": "npm run build && wrangler deploy",
+    "preview": "npm run build && wrangler dev"
   },
   "keywords": [],
   "author": "Willgrow",
   "license": "ISC",
   "type": "module",
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.27.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.4",
@@ -25,7 +28,8 @@
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "typescript": "^5.9.3",
-    "vite": "^7.3.1"
+    "vite": "^7.3.1",
+    "wrangler": "^4.72.0"
   },
   "dependencies": {
     "autoprefixer": "^10.4.27",
