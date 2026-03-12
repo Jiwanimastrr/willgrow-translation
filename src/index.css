@@ -18,7 +18,7 @@
 }
 
 body {
-  @apply bg-neu-bg text-gray-800 transition-colors duration-300 antialiased select-none;
+  @apply bg-neu-bg text-gray-800 transition-colors duration-300 antialiased overflow-hidden select-none;
 }
 
 /* Custom Scrollbar for better UI */
