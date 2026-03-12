@@ -66,7 +66,7 @@ function SetupScreen() {
             <div className="liquid-panel p-10 w-[500px] flex flex-col gap-8 shadow-2xl">
                 <div className="text-center space-y-2 mb-4">
                     <h2 className="text-3xl font-bold tracking-tight">Set up Class</h2>
-                    <p className="text-sm text-gray-500">오늘 진행할 테마와 차시를 선택해주세요.</p>
+                    <p className="text-sm text-gray-500">오늘 진행할 테마와 Day를 선택해주세요.</p>
                 </div>
 
                 <div className="space-y-4">
