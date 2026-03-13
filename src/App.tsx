@@ -147,8 +147,8 @@ function LearningScreen() {
                             className="w-full h-full flex flex-col min-h-0 overflow-hidden"
                         >
                             {currentChapter === 1 && <Ch1Flashcard key={`ch1-${idx}`} item={currentItem} onNext={goNext} onPrev={goPrev} progress={`${idx + 1}/${data.length}`} />}
-                            {currentChapter === 2 && <Ch2Interpretation key={`ch2-${idx}`} item={currentItem} onNext={goNext} progress={`${idx + 1}/${data.length}`} />}
-                            {currentChapter === 3 && <Ch3Translation key={`ch3-${idx}`} item={currentItem} onNext={goNext} progress={`${idx + 1}/${data.length}`} />}
+                            {currentChapter === 2 && <Ch2Interpretation key={`ch2-${idx}`} item={currentItem} onNext={goNext} onPrev={goPrev} progress={`${idx + 1}/${data.length}`} />}
+                            {currentChapter === 3 && <Ch3Translation key={`ch3-${idx}`} item={currentItem} onNext={goNext} onPrev={goPrev} progress={`${idx + 1}/${data.length}`} />}
                         </motion.div>
                     )}
                 </AnimatePresence>
@@ -201,18 +201,13 @@ function Ch1Flashcard({ item, onNext, onPrev, progress }: any) {
         return () => stopSpeech(); 
     }, [item, viewMode]);
 
-    const handleAction = () => {
-        if (!revealed) setRevealed(true);
-        else onNext();
-    };
-
     useEffect(() => {
         const handleKey = (e: KeyboardEvent) => {
             if (document.activeElement?.tagName === 'INPUT') return;
-            if (e.code === 'Enter') { e.preventDefault(); handleAction(); }
-            if (e.code === 'Space' || e.code === 'ArrowDown') { e.preventDefault(); speakText(item.Word); }
-            if (e.code === 'ArrowRight') handleAction(); 
-            if (e.code === 'ArrowLeft') onPrev();
+            if (e.code === 'Enter') { e.preventDefault(); setRevealed(!revealed); }
+            else if (e.code === 'ArrowDown' || e.code === 'Space') { e.preventDefault(); speakText(item.Word); }
+            else if (e.code === 'ArrowRight') { e.preventDefault(); onNext(); }
+            else if (e.code === 'ArrowLeft') { e.preventDefault(); onPrev(); }
         };
         window.addEventListener('keydown', handleKey); return () => window.removeEventListener('keydown', handleKey);
     }, [item, onNext, onPrev, revealed]);
@@ -252,17 +247,19 @@ function Ch1Flashcard({ item, onNext, onPrev, progress }: any) {
                 </div>
             </div>
 
-            <div className="flex justify-center shrink-0 h-[6vh] mt-1">
-                <button onClick={handleAction} className="neu-btn-blue px-10 text-[1.5vh] font-black rounded-2xl">
-                    {revealed ? '다음 (Next)' : '해석 확인 (Enter)'}
+            <div className="flex justify-center shrink-0 h-[6vh] mt-1 gap-3">
+                <button onClick={() => onPrev()} className="neu-btn px-6 text-[1.5vh] font-black rounded-2xl">Prev</button>
+                <button onClick={() => setRevealed(!revealed)} className="neu-btn-blue px-10 text-[1.5vh] font-black rounded-2xl">
+                    {revealed ? '숨기기 (Enter)' : '해석 확인 (Enter)'}
                 </button>
+                <button onClick={() => onNext()} className="neu-btn px-6 text-[1.5vh] font-black rounded-2xl">Next</button>
             </div>
         </div>
     );
 }
 
 // CH2: 통역
-function Ch2Interpretation({ item, onNext, progress }: any) {
+function Ch2Interpretation({ item, onNext, onPrev, progress }: any) {
     const [textVal, setTextVal] = useState('');
     const [revealed, setRevealed] = useState(false);
 
@@ -272,19 +269,25 @@ function Ch2Interpretation({ item, onNext, progress }: any) {
         return () => stopSpeech(); 
     }, [item]);
 
-    const handleAction = () => {
-        if (!revealed) setRevealed(true);
-        else onNext();
-    };
-
     useEffect(() => {
         const handleKey = (e: KeyboardEvent) => {
-            if (document.activeElement?.tagName === 'INPUT') { if (e.code === 'Enter') handleAction(); return; }
-            if (e.code === 'Enter') handleAction();
-            if (e.code === 'Space' || e.code === 'ArrowDown') { e.preventDefault(); speakText(item.Sentence1 || item.Word); }
+            const isInput = document.activeElement?.tagName === 'INPUT';
+            if (e.code === 'Enter') { e.preventDefault(); setRevealed(!revealed); }
+            else if (e.code === 'ArrowDown' || e.code === 'Space') { 
+                if (isInput && e.code === 'Space') return;
+                e.preventDefault(); speakText(item.Sentence1 || item.Word); 
+            }
+            else if (e.code === 'ArrowRight') { 
+                if (isInput && textVal !== '') return;
+                e.preventDefault(); onNext(); 
+            }
+            else if (e.code === 'ArrowLeft') { 
+                if (isInput && textVal !== '') return;
+                e.preventDefault(); onPrev(); 
+            }
         };
         window.addEventListener('keydown', handleKey); return () => window.removeEventListener('keydown', handleKey);
-    }, [item, onNext, revealed]);
+    }, [item, onNext, onPrev, revealed, textVal]);
 
     return (
         <div className="flex-1 w-full h-full flex flex-col gap-[1.5vh] min-h-0 overflow-hidden">
@@ -311,15 +314,17 @@ function Ch2Interpretation({ item, onNext, progress }: any) {
                     )}
                 </div>
             </div>
-            <div className="shrink-0 flex justify-center h-[7vh] mt-1">
-                <input autoFocus className="neu-input w-full p-3 text-[1.8vh] text-center" placeholder="듣고 해석하세요... (Enter로 확인)" value={textVal} onChange={e => setTextVal(e.target.value)} />
+            <div className="shrink-0 flex justify-center h-[7vh] mt-1 gap-2">
+                <input autoFocus className="neu-input flex-1 p-3 text-[1.8vh] text-center" placeholder="듣고 해석하세요... (Enter: 정답 토글, ↓: 음성)" value={textVal} onChange={e => setTextVal(e.target.value)} />
+                <button onClick={() => onPrev()} className="neu-btn px-4 text-[1.4vh] font-black">이전</button>
+                <button onClick={() => onNext()} className="neu-btn px-4 text-[1.4vh] font-black">다음</button>
             </div>
         </div>
     );
 }
 
 // CH3: 번역
-function Ch3Translation({ item, onNext, progress }: any) {
+function Ch3Translation({ item, onNext, onPrev, progress }: any) {
     const [textVal, setTextVal] = useState('');
     const [viewMode, setViewMode] = useState<'EN' | 'KR'>('EN');
     const [revealed, setRevealed] = useState(false);
@@ -330,18 +335,25 @@ function Ch3Translation({ item, onNext, progress }: any) {
         return () => stopSpeech(); 
     }, [item, viewMode]);
 
-    const handleAction = () => {
-        if (!revealed) setRevealed(true);
-        else onNext();
-    };
-
     useEffect(() => {
         const handleKey = (e: KeyboardEvent) => {
-            if (document.activeElement?.tagName === 'INPUT') { if (e.code === 'Enter') handleAction(); return; }
-            if (e.code === 'Enter') handleAction();
+            const isInput = document.activeElement?.tagName === 'INPUT';
+            if (e.code === 'Enter') { e.preventDefault(); setRevealed(!revealed); }
+            else if (e.code === 'ArrowDown' || e.code === 'Space') { 
+                if (isInput && e.code === 'Space') return;
+                e.preventDefault(); speakText(item.Sentence1 || item.Word); 
+            }
+            else if (e.code === 'ArrowRight') { 
+                if (isInput && textVal !== '') return;
+                e.preventDefault(); onNext(); 
+            }
+            else if (e.code === 'ArrowLeft') { 
+                if (isInput && textVal !== '') return;
+                e.preventDefault(); onPrev(); 
+            }
         };
         window.addEventListener('keydown', handleKey); return () => window.removeEventListener('keydown', handleKey);
-    }, [item, onNext, revealed]);
+    }, [item, onNext, onPrev, revealed, textVal]);
 
     return (
         <div className="flex-1 w-full h-full flex flex-col gap-[1.5vh] min-h-0 overflow-hidden">
@@ -375,8 +387,10 @@ function Ch3Translation({ item, onNext, progress }: any) {
                     )}
                 </div>
             </div>
-            <div className="shrink-0 flex justify-center h-[7vh] mt-1">
-                <input autoFocus className="neu-input w-full p-3 text-[1.8vh] text-center" placeholder="타이핑 후 Enter를 누르세요" value={textVal} onChange={e => setTextVal(e.target.value)} />
+            <div className="shrink-0 flex justify-center h-[7vh] mt-1 gap-2">
+                <input autoFocus className="neu-input flex-1 p-3 text-[1.8vh] text-center" placeholder="타이핑 후 Enter를 누르세요 (Enter: 뜻 토글, ↓: 음성)" value={textVal} onChange={e => setTextVal(e.target.value)} />
+                <button onClick={() => onPrev()} className="neu-btn px-4 text-[1.4vh] font-black">이전</button>
+                <button onClick={() => onNext()} className="neu-btn px-4 text-[1.4vh] font-black">다음</button>
             </div>
         </div>
     );
