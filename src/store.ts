@@ -43,8 +43,9 @@ function parseExcelBuffer(buffer: ArrayBuffer): { themes: string[]; rows: DataRo
 
     for (const sheetName of workbook.SheetNames) {
         const ws = workbook.Sheets[sheetName];
-        // 시트명에서 테마 추출 (예: "1. home" → "home")
-        const themeLabel = sheetName.replace(/^\d+\.\s*/, '').trim();
+        // 시트명에서 테마 추출 (예: "1. home" → "Home")
+        const rawThemeLabel = sheetName.replace(/^\d+\.\s*/, '').trim();
+        const themeLabel = rawThemeLabel.charAt(0).toUpperCase() + rawThemeLabel.slice(1);
         themes.push(themeLabel);
 
         // 4번째 행이 헤더 (0-indexed = 3번째)
